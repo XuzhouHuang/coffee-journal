@@ -122,7 +122,7 @@
   }
   body {
     @apply text-foreground min-h-screen;
-    background: linear-gradient(135deg, #f0f9ff 0%, #ecfdf5 50%, #f0fdfa 100%);
+    background: linear-gradient(160deg, #c9e8f0 0%, #b8e6d0 40%, #d4eee8 70%, #e0f0ea 100%);
   }
   .dark body {
     background: linear-gradient(135deg, #0c1a2a 0%, #0f2b2e 50%, #0a1f1f 100%);
