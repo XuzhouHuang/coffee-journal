@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import { ZCOOL_XiaoWei } from "next/font/google";
 import "./globals.css";
 import { AppLayout } from "@/components/app-layout";
 import { Toaster } from "@/components/ui/sonner";
+
+const brandFont = ZCOOL_XiaoWei({ subsets: ["latin"], weight: "400", variable: "--font-brand" });
 
 export const metadata: Metadata = {
   title: "咖啡日志",
@@ -10,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="zh-CN">
+    <html lang="zh-CN" className={brandFont.variable}>
       <body className="antialiased min-h-screen">
         <AppLayout>{children}</AppLayout>
         <Toaster />

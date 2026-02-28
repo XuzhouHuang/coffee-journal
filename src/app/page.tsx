@@ -63,7 +63,7 @@ export default async function HomePage() {
     <div className="space-y-6">
       {/* Welcome */}
       <div className="space-y-1">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-teal-500 to-emerald-400 bg-clip-text text-transparent">
+        <h1 className="text-3xl font-bold text-foreground font-[family-name:var(--font-brand)]">
           咖啡日志 ☕
         </h1>
         <p className="text-muted-foreground">记录每一杯的味道</p>

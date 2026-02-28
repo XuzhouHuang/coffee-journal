@@ -55,7 +55,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <aside className="hidden md:flex w-60 flex-col bg-white/40 dark:bg-white/5 backdrop-blur-xl border-r border-white/20 p-4">
         <Link href="/" className="flex items-center gap-2 mb-6 px-3">
           <span className="text-2xl">☕</span>
-          <span className="text-lg font-bold bg-gradient-to-r from-teal-500 to-emerald-400 bg-clip-text text-transparent">咖啡日志</span>
+          <span className="text-lg font-bold text-foreground font-[family-name:var(--font-brand)]">咖啡日志</span>
         </Link>
         <NavLinks />
       </aside>
@@ -66,7 +66,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <header className="md:hidden flex items-center justify-between bg-white/40 dark:bg-white/5 backdrop-blur-xl border-b border-white/20 p-4">
           <Link href="/" className="flex items-center gap-2">
             <span className="text-xl">☕</span>
-            <span className="font-bold bg-gradient-to-r from-teal-500 to-emerald-400 bg-clip-text text-transparent">咖啡日志</span>
+            <span className="font-bold text-foreground font-[family-name:var(--font-brand)]">咖啡日志</span>
           </Link>
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
@@ -77,7 +77,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <SheetContent side="left" className="w-60 bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl border-white/20">
               <div className="flex items-center gap-2 mb-6 px-3 pt-4">
                 <span className="text-2xl">☕</span>
-                <span className="text-lg font-bold bg-gradient-to-r from-teal-500 to-emerald-400 bg-clip-text text-transparent">咖啡日志</span>
+                <span className="text-lg font-bold text-foreground font-[family-name:var(--font-brand)]">咖啡日志</span>
               </div>
               <NavLinks onClick={() => setOpen(false)} />
             </SheetContent>
