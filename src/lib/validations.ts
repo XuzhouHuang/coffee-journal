@@ -12,7 +12,7 @@ export const createBeanSchema = z.object({
   score: z.union([z.number(), z.string()]).nullable().optional(),
 });
 
-export const updateBeanSchema = createBeanSchema;
+export const updateBeanSchema = createBeanSchema.partial();
 
 export const createBeanPurchaseSchema = z.object({
   price: z.union([z.number(), z.string()]).transform((v) => {
