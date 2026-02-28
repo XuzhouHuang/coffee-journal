@@ -56,10 +56,10 @@ export function PurchasesList({ initialBeanPurchases, initialCafePurchases, stat
       {/* Stats cards */}
       <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
         {[
-          { label: "本月豆子消费", value: `¥${stats.monthBeans.toFixed(0)}`, gradient: "from-teal-400/20 to-teal-500/20" },
-          { label: "本月咖啡店消费", value: `¥${stats.monthCafe.toFixed(0)}`, gradient: "from-emerald-400/20 to-emerald-500/20" },
-          { label: "本月总消费", value: `¥${stats.monthTotal.toFixed(0)}`, gradient: "from-orange-400/20 to-orange-500/20" },
-          { label: "本月消费次数", value: `${stats.monthCount} 次`, gradient: "from-amber-400/20 to-amber-500/20" },
+          { label: "本月豆子消费", value: `¥${stats.monthBeans.toFixed(0)}`, gradient: "from-blue-500/20 to-blue-600/20" },
+          { label: "本月咖啡店消费", value: `¥${stats.monthCafe.toFixed(0)}`, gradient: "from-blue-500/20 to-blue-600/20" },
+          { label: "本月总消费", value: `¥${stats.monthTotal.toFixed(0)}`, gradient: "from-blue-500/20 to-blue-600/20" },
+          { label: "本月消费次数", value: `${stats.monthCount} 次`, gradient: "from-blue-500/20 to-blue-600/20" },
         ].map((s) => (
           <Card key={s.label} className="glass-card border-0">
             <CardContent className="pt-4 pb-3">
@@ -83,8 +83,8 @@ export function PurchasesList({ initialBeanPurchases, initialCafePurchases, stat
                 <YAxis />
                 <Tooltip formatter={(value) => `¥${value}`} />
                 <Legend />
-                <Bar dataKey="beans" name="豆子" fill="#a855f7" radius={[6, 6, 0, 0]} />
-                <Bar dataKey="cafe" name="咖啡店" fill="#ec4899" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="beans" name="豆子" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="cafe" name="咖啡店" fill="#22d3ee" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -95,14 +95,14 @@ export function PurchasesList({ initialBeanPurchases, initialCafePurchases, stat
         <Button
           onClick={() => setTab("beans")}
           size="sm"
-          className={tab === "beans" ? "gradient-btn" : "rounded-full bg-white/40 dark:bg-white/10 text-foreground hover:bg-white/60 dark:hover:bg-white/20"}
+          className={tab === "beans" ? "gradient-btn" : "rounded-full bg-white/[0.05] text-foreground hover:bg-[rgba(15,25,45,0.6)]"}
         >
           豆子购买 ({beanPurchases.length})
         </Button>
         <Button
           onClick={() => setTab("cafe")}
           size="sm"
-          className={tab === "cafe" ? "gradient-btn" : "rounded-full bg-white/40 dark:bg-white/10 text-foreground hover:bg-white/60 dark:hover:bg-white/20"}
+          className={tab === "cafe" ? "gradient-btn" : "rounded-full bg-white/[0.05] text-foreground hover:bg-[rgba(15,25,45,0.6)]"}
         >
           咖啡店消费 ({cafePurchases.length})
         </Button>
@@ -126,7 +126,7 @@ export function PurchasesList({ initialBeanPurchases, initialCafePurchases, stat
                 </TableHeader>
                 <TableBody>
                   {beanPurchases.map((p) => (
-                    <TableRow key={p.id} className="hover:bg-white/30 dark:hover:bg-white/5">
+                    <TableRow key={p.id} className="hover:bg-white/[0.05]">
                       <TableCell>{new Date(p.purchaseDate).toLocaleDateString("zh-CN")}</TableCell>
                       <TableCell>
                         {p.bean ? (
@@ -154,7 +154,7 @@ export function PurchasesList({ initialBeanPurchases, initialCafePurchases, stat
           ) : (
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {cafePurchases.map((p) => (
-                <Card key={p.id} className="glass-card border-0 hover:shadow-xl hover:shadow-teal-500/10 hover:scale-[1.02] transition-all">
+                <Card key={p.id} className="glass-card border-0 hover:shadow-xl hover:shadow-blue-500/10 hover:scale-[1.02] transition-all">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-base flex items-center justify-between">
                       <span>{p.cafeName}</span>
@@ -165,7 +165,7 @@ export function PurchasesList({ initialBeanPurchases, initialCafePurchases, stat
                     <p>{p.drinkName}</p>
                     <div className="flex flex-wrap gap-1">
                       {p.drinkType && <Badge variant="outline" className="rounded-full">{p.drinkType}</Badge>}
-                      {p.location && <Badge variant="secondary" className="rounded-full bg-teal-100/60 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300">{p.location}</Badge>}
+                      {p.location && <Badge variant="secondary" className="rounded-full bg-blue-500/20 text-blue-300">{p.location}</Badge>}
                     </div>
                     <div className="flex justify-between text-muted-foreground">
                       <span>{new Date(p.purchaseDate).toLocaleDateString("zh-CN")}</span>

@@ -74,9 +74,9 @@ export function EntityDialog({ title, buttonLabel, apiEndpoint, fields }: Entity
             <div key={f.name}>
               <Label>{f.label}{f.required ? " *" : ""}</Label>
               {f.type === "textarea" ? (
-                <Textarea name={f.name} required={f.required} placeholder={f.placeholder} className="rounded-xl bg-white/40 dark:bg-white/10" />
+                <Textarea name={f.name} required={f.required} placeholder={f.placeholder} className="rounded-xl bg-white/[0.05]" />
               ) : (
-                <Input name={f.name} required={f.required} placeholder={f.placeholder} type={f.type === "url" ? "url" : "text"} className="rounded-xl bg-white/40 dark:bg-white/10" />
+                <Input name={f.name} required={f.required} placeholder={f.placeholder} type={f.type === "url" ? "url" : "text"} className="rounded-xl bg-white/[0.05]" />
               )}
             </div>
           ))}

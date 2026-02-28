@@ -80,15 +80,15 @@ export function BeanDetailView({ initialBean }: BeanDetailViewProps) {
       <Card className="glass-card border-0">
         <CardContent className="pt-6 space-y-3">
           <div className="flex flex-wrap gap-2">
-            {bean.region && <Badge variant="secondary" className="rounded-full bg-teal-100/60 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300">{bean.region.country} - {bean.region.region}</Badge>}
+            {bean.region && <Badge variant="secondary" className="rounded-full bg-blue-500/20 text-blue-300">{bean.region.country} - {bean.region.region}</Badge>}
             {bean.variety && <Badge variant="outline" className="rounded-full">{bean.variety.name}</Badge>}
-            {bean.roastLevel && <Badge className="rounded-full bg-gradient-to-r from-teal-400 to-emerald-400 text-white border-0">{bean.roastLevel}</Badge>}
+            {bean.roastLevel && <Badge className="rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white border-0">{bean.roastLevel}</Badge>}
             {bean.process && <Badge variant="outline" className="rounded-full">{bean.process}</Badge>}
           </div>
           {bean.roaster && <p className="text-sm">烘焙商: {bean.roaster.name} ({bean.roaster.country})</p>}
           {bean.flavorNotes && <p className="text-sm">风味: {bean.flavorNotes}</p>}
           {bean.variety?.flavor && <p className="text-sm text-muted-foreground">品种风味: {bean.variety.flavor}</p>}
-          {bean.score != null && <p className="text-sm font-semibold bg-gradient-to-r from-teal-500 to-emerald-400 bg-clip-text text-transparent">评分: {bean.score}</p>}
+          {bean.score != null && <p className="text-sm font-semibold bg-gradient-to-r from-blue-600 to-cyan-400 bg-clip-text text-transparent">评分: {bean.score}</p>}
         </CardContent>
       </Card>
 
@@ -105,12 +105,12 @@ export function BeanDetailView({ initialBean }: BeanDetailViewProps) {
               <DialogHeader><DialogTitle>添加购买记录</DialogTitle></DialogHeader>
               <form key={purchaseKey} onSubmit={handlePurchase} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <div><Label>价格 (元) *</Label><Input name="price" type="number" step="0.01" required className="rounded-xl bg-white/40 dark:bg-white/10" /></div>
-                  <div><Label>重量 (g) *</Label><Input name="weight" type="number" required className="rounded-xl bg-white/40 dark:bg-white/10" /></div>
+                  <div><Label>价格 (元) *</Label><Input name="price" type="number" step="0.01" required className="rounded-xl bg-white/[0.05]" /></div>
+                  <div><Label>重量 (g) *</Label><Input name="weight" type="number" required className="rounded-xl bg-white/[0.05]" /></div>
                 </div>
-                <div><Label>购买日期 *</Label><Input name="purchaseDate" type="date" required defaultValue={todayLocal()} className="rounded-xl bg-white/40 dark:bg-white/10" /></div>
-                <div><Label>购买渠道</Label><Input name="source" placeholder="淘宝/官网/线下..." className="rounded-xl bg-white/40 dark:bg-white/10" /></div>
-                <div><Label>备注</Label><Textarea name="notes" className="rounded-xl bg-white/40 dark:bg-white/10" /></div>
+                <div><Label>购买日期 *</Label><Input name="purchaseDate" type="date" required defaultValue={todayLocal()} className="rounded-xl bg-white/[0.05]" /></div>
+                <div><Label>购买渠道</Label><Input name="source" placeholder="淘宝/官网/线下..." className="rounded-xl bg-white/[0.05]" /></div>
+                <div><Label>备注</Label><Textarea name="notes" className="rounded-xl bg-white/[0.05]" /></div>
                 <Button type="submit" className="w-full gradient-btn">保存</Button>
               </form>
             </DialogContent>
@@ -132,7 +132,7 @@ export function BeanDetailView({ initialBean }: BeanDetailViewProps) {
               </TableHeader>
               <TableBody>
                 {bean.purchases.map((p) => (
-                  <TableRow key={p.id} className="hover:bg-white/30 dark:hover:bg-white/5">
+                  <TableRow key={p.id} className="hover:bg-white/[0.05]">
                     <TableCell>{new Date(p.purchaseDate).toLocaleDateString("zh-CN")}</TableCell>
                     <TableCell>¥{p.price}</TableCell>
                     <TableCell>{p.weight}g</TableCell>
@@ -160,11 +160,11 @@ export function BeanDetailView({ initialBean }: BeanDetailViewProps) {
         ) : (
           <div className="grid gap-3 sm:grid-cols-2">
             {bean.brewLogs.map((log) => (
-              <Card key={log.id} className="glass-card border-0 hover:shadow-xl hover:shadow-teal-500/10 transition-all">
+              <Card key={log.id} className="glass-card border-0 hover:shadow-xl hover:shadow-blue-500/10 transition-all">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm flex items-center justify-between">
                     <span>{log.brewMethod}</span>
-                    {log.rating != null && <Badge variant="secondary" className="rounded-full bg-gradient-to-r from-teal-400 to-emerald-400 text-white border-0">⭐ {log.rating}</Badge>}
+                    {log.rating != null && <Badge variant="secondary" className="rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white border-0">⭐ {log.rating}</Badge>}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-sm space-y-1">

@@ -53,20 +53,20 @@ export default async function HomePage() {
     .slice(0, 5);
 
   const statCards = [
-    { emoji: "☕", label: "咖啡豆种类", value: `${beanCount} 款`, gradient: "from-teal-400/20 to-teal-500/20" },
-    { emoji: "📝", label: "冲煮记录", value: `${brewCount} 次`, gradient: "from-emerald-400/20 to-emerald-500/20" },
-    { emoji: "💰", label: "本月消费", value: `¥${monthTotal.toFixed(0)}`, gradient: "from-orange-400/20 to-orange-500/20" },
-    { emoji: "⭐", label: "最高评分", value: maxRating != null ? maxRating.toFixed(1) : "-", gradient: "from-amber-400/20 to-amber-500/20" },
+    { emoji: "☕", label: "咖啡豆种类", value: `${beanCount} 款`, gradient: "from-blue-500/20 to-blue-600/20" },
+    { emoji: "📝", label: "冲煮记录", value: `${brewCount} 次`, gradient: "from-blue-500/20 to-blue-600/20" },
+    { emoji: "💰", label: "本月消费", value: `¥${monthTotal.toFixed(0)}`, gradient: "from-blue-500/20 to-blue-600/20" },
+    { emoji: "⭐", label: "最高评分", value: maxRating != null ? maxRating.toFixed(1) : "-", gradient: "from-blue-500/20 to-blue-600/20" },
   ];
 
   return (
     <div className="space-y-6">
       {/* Welcome */}
       <div className="space-y-1">
-        <h1 className="text-3xl font-bold text-foreground font-[family-name:var(--font-brand)]">
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 via-blue-300 to-amber-400 bg-clip-text text-transparent font-[family-name:var(--font-brand)]">
           Coffee Journal ☕
         </h1>
-        <p className="text-muted-foreground">记录每一杯的味道</p>
+        <p className="text-slate-400">记录每一杯的味道</p>
       </div>
 
       {/* Stats */}
@@ -79,8 +79,8 @@ export default async function HomePage() {
                   {s.emoji}
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">{s.label}</p>
-                  <p className="text-2xl font-bold">{s.value}</p>
+                  <p className="text-xs text-slate-500">{s.label}</p>
+                  <p className="text-2xl font-bold text-blue-400">{s.value}</p>
                 </div>
               </div>
             </CardContent>
@@ -100,7 +100,7 @@ export default async function HomePage() {
             ) : (
               <div className="space-y-3">
                 {recentBrews.map((b) => (
-                  <div key={b.id} className="flex items-center justify-between text-sm p-2 rounded-xl hover:bg-white/40 dark:hover:bg-white/5 transition-colors">
+                  <div key={b.id} className="flex items-center justify-between text-sm p-2 rounded-xl hover:bg-white/[0.05] transition-colors">
                     <div>
                       <span className="font-medium">{b.bean.name}</span>
                       <span className="text-muted-foreground ml-2">{b.brewMethod}</span>
@@ -127,7 +127,7 @@ export default async function HomePage() {
             ) : (
               <div className="space-y-3">
                 {recentPurchases.map((p) => (
-                  <div key={p.id} className="flex items-center justify-between text-sm p-2 rounded-xl hover:bg-white/40 dark:hover:bg-white/5 transition-colors">
+                  <div key={p.id} className="flex items-center justify-between text-sm p-2 rounded-xl hover:bg-white/[0.05] transition-colors">
                     <div>
                       <span className="font-medium">{p.name}</span>
                       <span className="text-muted-foreground ml-2 text-xs">{p.type}</span>

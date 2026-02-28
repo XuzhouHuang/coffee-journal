@@ -33,8 +33,8 @@ function NavLinks({ onClick }: { onClick?: () => void }) {
           className={cn(
             "flex items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-bold transition-all",
             isActive
-              ? "bg-gradient-to-r from-teal-400 to-emerald-400 text-white shadow-md shadow-teal-500/20"
-              : "text-muted-foreground hover:bg-teal-50/60 hover:text-foreground dark:hover:bg-white/5"
+              ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-md shadow-blue-500/30"
+              : "text-slate-400 hover:bg-white/[0.05] hover:text-white"
           )}
         >
           <item.icon className="h-5 w-5" />
@@ -52,7 +52,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen">
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex w-60 flex-col bg-white/40 dark:bg-white/5 backdrop-blur-xl border-r border-white/20 p-4">
+      <aside className="hidden md:flex w-60 flex-col bg-[rgba(10,15,26,0.7)] backdrop-blur-xl border-r border-white/[0.08] p-4">
         <Link href="/" className="flex items-center gap-2 mb-6 px-3">
           <span className="text-2xl">☕</span>
           <span className="text-lg font-bold text-foreground font-[family-name:var(--font-brand)]">Coffee Journal</span>
@@ -63,7 +63,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       {/* Main content */}
       <div className="flex-1 flex flex-col">
         {/* Mobile header */}
-        <header className="md:hidden flex items-center justify-between bg-white/40 dark:bg-white/5 backdrop-blur-xl border-b border-white/20 p-4">
+        <header className="md:hidden flex items-center justify-between bg-white/[0.05] backdrop-blur-xl border-b border-white/[0.08] p-4">
           <Link href="/" className="flex items-center gap-2">
             <span className="text-xl">☕</span>
             <span className="font-bold text-foreground font-[family-name:var(--font-brand)]">Coffee Journal</span>
@@ -74,7 +74,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-60 bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl border-white/20">
+            <SheetContent side="left" className="w-60 bg-[rgba(10,15,26,0.7)] backdrop-blur-xl border-white/[0.08]">
               <div className="flex items-center gap-2 mb-6 px-3 pt-4">
                 <span className="text-2xl">☕</span>
                 <span className="text-lg font-bold text-foreground font-[family-name:var(--font-brand)]">Coffee Journal</span>

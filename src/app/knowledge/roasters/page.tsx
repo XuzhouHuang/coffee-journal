@@ -18,7 +18,7 @@ export default async function RoastersPage() {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {roasters.map((r) => (
-            <Card key={r.id} className="glass-card border-0 hover:shadow-xl hover:shadow-teal-500/10 hover:scale-[1.02] transition-all">
+            <Card key={r.id} className="glass-card border-0 hover:shadow-xl hover:shadow-blue-500/10 hover:scale-[1.02] transition-all">
               <CardHeader className="pb-2">
                 <CardTitle className="text-base flex items-center justify-between">
                   <span>{r.name}</span>
