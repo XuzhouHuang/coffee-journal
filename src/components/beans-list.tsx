@@ -148,7 +148,7 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
               </div>
               <div>
                 <Label>评分</Label>
-                <Input name="score" type="number" step="0.1" min="0" max="100" />
+                <Input name="score" type="number" step="0.1" min="0" max="5" />
               </div>
               <Button type="submit" className="w-full">保存</Button>
             </form>

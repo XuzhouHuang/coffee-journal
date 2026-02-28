@@ -8,6 +8,7 @@ export const createBeanSchema = z.object({
   process: z.string().nullable().optional(),
   roastLevel: z.string().nullable().optional(),
   flavorNotes: z.string().nullable().optional(),
+  // Bean score and brew rating both use 1-5 scale
   score: z.union([z.number(), z.string()]).nullable().optional(),
 });
 

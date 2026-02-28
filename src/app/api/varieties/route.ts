@@ -14,13 +14,13 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const data = createVarietySchema.parse(body);
-    const variety = await prisma.variety.create({ data });
-    return NextResponse.json(variety, { status: 201 });
-  } catch (err) {
-    if (err instanceof Error && err.name === "ZodError") {
-      return NextResponse.json({ error: "数据验证失败", details: err }, { status: 400 });
+    const result = createVarietySchema.safeParse(body);
+    if (!result.success) {
+      return NextResponse.json({ error: result.error.issues.map((i: { message: string }) => i.message).join(", ") }, { status: 400 });
     }
+    const variety = await prisma.variety.create({ data: result.data });
+    return NextResponse.json(variety, { status: 201 });
+  } catch {
     return NextResponse.json({ error: "创建品种失败" }, { status: 500 });
   }
 }

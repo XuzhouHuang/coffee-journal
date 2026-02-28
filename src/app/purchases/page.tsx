@@ -2,7 +2,10 @@ import { prisma } from "@/lib/db";
 import { PurchasesList } from "@/components/purchases-list";
 
 export default async function PurchasesPage() {
-  const [beanPurchasesRaw, cafePurchasesRaw, allBeanPrices, allCafePrices] = await Promise.all([
+  const now = new Date();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  const [beanPurchasesRaw, cafePurchasesRaw, monthBeanAgg, monthCafeAgg, monthBeanCount, monthCafeCount] = await Promise.all([
     prisma.beanPurchase.findMany({
       include: { bean: true },
       orderBy: { purchaseDate: "desc" },
@@ -12,13 +15,33 @@ export default async function PurchasesPage() {
       orderBy: { purchaseDate: "desc" },
       take: 20,
     }),
-    prisma.beanPurchase.findMany({
-      select: { price: true, purchaseDate: true },
+    prisma.beanPurchase.aggregate({
+      _sum: { price: true },
+      where: { purchaseDate: { gte: startOfMonth } },
     }),
-    prisma.cafePurchase.findMany({
-      select: { price: true, purchaseDate: true },
+    prisma.cafePurchase.aggregate({
+      _sum: { price: true },
+      where: { purchaseDate: { gte: startOfMonth } },
     }),
+    prisma.beanPurchase.count({ where: { purchaseDate: { gte: startOfMonth } } }),
+    prisma.cafePurchase.count({ where: { purchaseDate: { gte: startOfMonth } } }),
   ]);
+
+  // Monthly chart data: last 6 months via DB aggregation
+  const monthlyData: { month: string; beans: number; cafe: number }[] = [];
+  for (let i = 5; i >= 0; i--) {
+    const start = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const end = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
+    const [beanMonth, cafeMonth] = await Promise.all([
+      prisma.beanPurchase.aggregate({ _sum: { price: true }, where: { purchaseDate: { gte: start, lt: end } } }),
+      prisma.cafePurchase.aggregate({ _sum: { price: true }, where: { purchaseDate: { gte: start, lt: end } } }),
+    ]);
+    monthlyData.push({
+      month: `${start.getMonth() + 1}月`,
+      beans: beanMonth._sum.price || 0,
+      cafe: cafeMonth._sum.price || 0,
+    });
+  }
 
   const beanPurchases = beanPurchasesRaw.map((p) => ({
     id: p.id,
@@ -41,52 +64,11 @@ export default async function PurchasesPage() {
     rating: p.rating,
   }));
 
-  // Calculate monthly stats for last 6 months
-  const now = new Date();
-  const currentMonth = now.getMonth();
-  const currentYear = now.getFullYear();
-
-  const monthlyData: { month: string; beans: number; cafe: number }[] = [];
-  for (let i = 5; i >= 0; i--) {
-    const d = new Date(currentYear, currentMonth - i, 1);
-    const m = d.getMonth();
-    const y = d.getFullYear();
-    const label = `${m + 1}月`;
-
-    const beanTotal = allBeanPrices
-      .filter((p) => {
-        const pd = new Date(p.purchaseDate);
-        return pd.getMonth() === m && pd.getFullYear() === y;
-      })
-      .reduce((sum, p) => sum + p.price, 0);
-
-    const cafeTotal = allCafePrices
-      .filter((p) => {
-        const pd = new Date(p.purchaseDate);
-        return pd.getMonth() === m && pd.getFullYear() === y;
-      })
-      .reduce((sum, p) => sum + p.price, 0);
-
-    monthlyData.push({ month: label, beans: beanTotal, cafe: cafeTotal });
-  }
-
-  // Current month stats
-  const thisMonthBeans = allBeanPrices
-    .filter((p) => {
-      const pd = new Date(p.purchaseDate);
-      return pd.getMonth() === currentMonth && pd.getFullYear() === currentYear;
-    });
-  const thisMonthCafe = allCafePrices
-    .filter((p) => {
-      const pd = new Date(p.purchaseDate);
-      return pd.getMonth() === currentMonth && pd.getFullYear() === currentYear;
-    });
-
   const stats = {
-    monthBeans: thisMonthBeans.reduce((s, p) => s + p.price, 0),
-    monthCafe: thisMonthCafe.reduce((s, p) => s + p.price, 0),
-    monthTotal: thisMonthBeans.reduce((s, p) => s + p.price, 0) + thisMonthCafe.reduce((s, p) => s + p.price, 0),
-    monthCount: thisMonthBeans.length + thisMonthCafe.length,
+    monthBeans: monthBeanAgg._sum.price || 0,
+    monthCafe: monthCafeAgg._sum.price || 0,
+    monthTotal: (monthBeanAgg._sum.price || 0) + (monthCafeAgg._sum.price || 0),
+    monthCount: monthBeanCount + monthCafeCount,
     monthlyData,
   };
 

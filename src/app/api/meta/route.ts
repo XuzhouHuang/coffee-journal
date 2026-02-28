@@ -1,3 +1,5 @@
+// NOTE: This API route is kept for potential external/mobile client use.
+// Currently, the web UI uses Server Components with direct Prisma access.
 import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
 
