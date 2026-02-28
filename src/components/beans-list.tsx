@@ -86,22 +86,22 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
         <h1 className="text-2xl font-bold">咖啡豆</h1>
         <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
           <DialogTrigger asChild>
-            <Button><Plus className="h-4 w-4 mr-2" />添加咖啡豆</Button>
+            <Button className="gradient-btn"><Plus className="h-4 w-4 mr-2" />添加咖啡豆</Button>
           </DialogTrigger>
-          <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto glass-card">
             <DialogHeader>
               <DialogTitle>添加咖啡豆</DialogTitle>
             </DialogHeader>
             <form key={dialogKey} onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <Label>豆名 *</Label>
-                <Input name="name" required />
+                <Input name="name" required className="rounded-xl bg-white/40 dark:bg-white/10 backdrop-blur-sm" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label>产区</Label>
                   <Select name="regionId">
-                    <SelectTrigger><SelectValue placeholder="选择产区" /></SelectTrigger>
+                    <SelectTrigger className="rounded-xl bg-white/40 dark:bg-white/10"><SelectValue placeholder="选择产区" /></SelectTrigger>
                     <SelectContent>
                       {meta.regions.map((r) => (
                         <SelectItem key={r.id} value={r.id.toString()}>{r.country} - {r.region}</SelectItem>
@@ -112,7 +112,7 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
                 <div>
                   <Label>品种</Label>
                   <Select name="varietyId">
-                    <SelectTrigger><SelectValue placeholder="选择品种" /></SelectTrigger>
+                    <SelectTrigger className="rounded-xl bg-white/40 dark:bg-white/10"><SelectValue placeholder="选择品种" /></SelectTrigger>
                     <SelectContent>
                       {meta.varieties.map((v) => (
                         <SelectItem key={v.id} value={v.id.toString()}>{v.name}</SelectItem>
@@ -124,7 +124,7 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
               <div>
                 <Label>烘焙商</Label>
                 <Select name="roasterId">
-                  <SelectTrigger><SelectValue placeholder="选择烘焙商" /></SelectTrigger>
+                  <SelectTrigger className="rounded-xl bg-white/40 dark:bg-white/10"><SelectValue placeholder="选择烘焙商" /></SelectTrigger>
                   <SelectContent>
                     {meta.roasters.map((r) => (
                       <SelectItem key={r.id} value={r.id.toString()}>{r.name}</SelectItem>
@@ -135,22 +135,22 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label>处理法</Label>
-                  <Input name="process" placeholder="水洗/日晒/蜜处理..." />
+                  <Input name="process" placeholder="水洗/日晒/蜜处理..." className="rounded-xl bg-white/40 dark:bg-white/10" />
                 </div>
                 <div>
                   <Label>烘焙度</Label>
-                  <Input name="roastLevel" placeholder="浅/中/深" />
+                  <Input name="roastLevel" placeholder="浅/中/深" className="rounded-xl bg-white/40 dark:bg-white/10" />
                 </div>
               </div>
               <div>
                 <Label>风味描述</Label>
-                <Textarea name="flavorNotes" placeholder="花香、柑橘、巧克力..." />
+                <Textarea name="flavorNotes" placeholder="花香、柑橘、巧克力..." className="rounded-xl bg-white/40 dark:bg-white/10" />
               </div>
               <div>
                 <Label>评分</Label>
-                <Input name="score" type="number" step="0.1" min="0" max="5" />
+                <Input name="score" type="number" step="0.1" min="0" max="5" className="rounded-xl bg-white/40 dark:bg-white/10" />
               </div>
-              <Button type="submit" className="w-full">保存</Button>
+              <Button type="submit" className="w-full gradient-btn">保存</Button>
             </form>
           </DialogContent>
         </Dialog>
@@ -162,10 +162,10 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
           placeholder="搜索豆名..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="sm:max-w-xs"
+          className="sm:max-w-xs rounded-xl bg-white/40 dark:bg-white/10 backdrop-blur-sm"
         />
         <Select value={filterRegion} onValueChange={setFilterRegion}>
-          <SelectTrigger className="sm:max-w-[180px]"><SelectValue placeholder="筛选产区" /></SelectTrigger>
+          <SelectTrigger className="sm:max-w-[180px] rounded-xl bg-white/40 dark:bg-white/10"><SelectValue placeholder="筛选产区" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">全部产区</SelectItem>
             {meta.regions.map((r) => (
@@ -174,7 +174,7 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
           </SelectContent>
         </Select>
         <Select value={filterVariety} onValueChange={setFilterVariety}>
-          <SelectTrigger className="sm:max-w-[180px]"><SelectValue placeholder="筛选品种" /></SelectTrigger>
+          <SelectTrigger className="sm:max-w-[180px] rounded-xl bg-white/40 dark:bg-white/10"><SelectValue placeholder="筛选品种" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">全部品种</SelectItem>
             {meta.varieties.map((v) => (
@@ -195,16 +195,16 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((bean) => (
             <Link key={bean.id} href={`/beans/${bean.id}`}>
-              <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
+              <Card className="glass-card border-0 hover:shadow-xl hover:shadow-purple-500/10 hover:scale-[1.02] transition-all cursor-pointer h-full">
                 <CardHeader>
                   <CardTitle className="text-base">{bean.name}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <div className="flex flex-wrap gap-1">
-                    {bean.region && <Badge variant="secondary">{bean.region.country}</Badge>}
-                    {bean.variety && <Badge variant="outline">{bean.variety.name}</Badge>}
-                    {bean.roastLevel && <Badge>{bean.roastLevel}</Badge>}
-                    {bean.process && <Badge variant="outline">{bean.process}</Badge>}
+                    {bean.region && <Badge variant="secondary" className="rounded-full bg-purple-100/60 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">{bean.region.country}</Badge>}
+                    {bean.variety && <Badge variant="outline" className="rounded-full">{bean.variety.name}</Badge>}
+                    {bean.roastLevel && <Badge className="rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0">{bean.roastLevel}</Badge>}
+                    {bean.process && <Badge variant="outline" className="rounded-full">{bean.process}</Badge>}
                   </div>
                   {bean.roaster && (
                     <p className="text-sm text-muted-foreground">烘焙商: {bean.roaster.name}</p>
@@ -213,7 +213,7 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
                     <p className="text-sm text-muted-foreground">{bean.flavorNotes}</p>
                   )}
                   {bean.score != null && (
-                    <p className="text-sm font-medium">评分: {bean.score}</p>
+                    <p className="text-sm font-semibold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">评分: {bean.score}</p>
                   )}
                 </CardContent>
               </Card>

@@ -33,7 +33,6 @@ export default async function HomePage() {
   const monthTotal = (monthBeanSpend._sum.price || 0) + (monthCafeSpend._sum.price || 0);
   const maxRating = topRating._max.rating;
 
-  // Merge and sort recent purchases
   const recentPurchases = [
     ...recentBeanPurchases.map((p) => ({
       id: `b-${p.id}`,
@@ -53,41 +52,45 @@ export default async function HomePage() {
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 5);
 
+  const statCards = [
+    { emoji: "☕", label: "咖啡豆种类", value: `${beanCount} 款`, gradient: "from-purple-500/20 to-purple-600/20" },
+    { emoji: "📝", label: "冲煮记录", value: `${brewCount} 次`, gradient: "from-pink-500/20 to-pink-600/20" },
+    { emoji: "💰", label: "本月消费", value: `¥${monthTotal.toFixed(0)}`, gradient: "from-orange-400/20 to-orange-500/20" },
+    { emoji: "⭐", label: "最高评分", value: maxRating != null ? maxRating.toFixed(1) : "-", gradient: "from-amber-400/20 to-amber-500/20" },
+  ];
+
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">咖啡日志 ☕</h1>
+      {/* Welcome */}
+      <div className="space-y-1">
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+          咖啡日志 ☕
+        </h1>
+        <p className="text-muted-foreground">记录每一杯的味道</p>
+      </div>
 
       {/* Stats */}
       <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardContent className="pt-4 pb-3">
-            <p className="text-sm text-muted-foreground">☕ 咖啡豆种类</p>
-            <p className="text-2xl font-bold">{beanCount} 款</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-4 pb-3">
-            <p className="text-sm text-muted-foreground">📝 冲煮记录</p>
-            <p className="text-2xl font-bold">{brewCount} 次</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-4 pb-3">
-            <p className="text-sm text-muted-foreground">💰 本月消费</p>
-            <p className="text-2xl font-bold">¥{monthTotal.toFixed(0)}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-4 pb-3">
-            <p className="text-sm text-muted-foreground">⭐ 最高评分</p>
-            <p className="text-2xl font-bold">{maxRating != null ? maxRating.toFixed(1) : "-"}</p>
-          </CardContent>
-        </Card>
+        {statCards.map((s) => (
+          <Card key={s.label} className="glass-card border-0">
+            <CardContent className="pt-4 pb-3">
+              <div className="flex items-center gap-3">
+                <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${s.gradient} flex items-center justify-center text-lg`}>
+                  {s.emoji}
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">{s.label}</p>
+                  <p className="text-2xl font-bold">{s.value}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Recent brews */}
-        <Card>
+        <Card className="glass-card border-0">
           <CardHeader>
             <CardTitle className="text-base">最近冲煮</CardTitle>
           </CardHeader>
@@ -97,7 +100,7 @@ export default async function HomePage() {
             ) : (
               <div className="space-y-3">
                 {recentBrews.map((b) => (
-                  <div key={b.id} className="flex items-center justify-between text-sm">
+                  <div key={b.id} className="flex items-center justify-between text-sm p-2 rounded-xl hover:bg-white/40 dark:hover:bg-white/5 transition-colors">
                     <div>
                       <span className="font-medium">{b.bean.name}</span>
                       <span className="text-muted-foreground ml-2">{b.brewMethod}</span>
@@ -114,7 +117,7 @@ export default async function HomePage() {
         </Card>
 
         {/* Recent purchases */}
-        <Card>
+        <Card className="glass-card border-0">
           <CardHeader>
             <CardTitle className="text-base">最近消费</CardTitle>
           </CardHeader>
@@ -124,7 +127,7 @@ export default async function HomePage() {
             ) : (
               <div className="space-y-3">
                 {recentPurchases.map((p) => (
-                  <div key={p.id} className="flex items-center justify-between text-sm">
+                  <div key={p.id} className="flex items-center justify-between text-sm p-2 rounded-xl hover:bg-white/40 dark:hover:bg-white/5 transition-colors">
                     <div>
                       <span className="font-medium">{p.name}</span>
                       <span className="text-muted-foreground ml-2 text-xs">{p.type}</span>

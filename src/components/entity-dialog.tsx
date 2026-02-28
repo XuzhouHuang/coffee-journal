@@ -65,22 +65,22 @@ export function EntityDialog({ title, buttonLabel, apiEndpoint, fields }: Entity
   return (
     <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (o) setFormKey((k) => k + 1); }}>
       <DialogTrigger asChild>
-        <Button><Plus className="h-4 w-4 mr-2" />{buttonLabel}</Button>
+        <Button className="gradient-btn"><Plus className="h-4 w-4 mr-2" />{buttonLabel}</Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="glass-card">
         <DialogHeader><DialogTitle>{title}</DialogTitle></DialogHeader>
         <form key={formKey} onSubmit={onSubmit} className="space-y-3">
           {fields.map((f) => (
             <div key={f.name}>
               <Label>{f.label}{f.required ? " *" : ""}</Label>
               {f.type === "textarea" ? (
-                <Textarea name={f.name} required={f.required} placeholder={f.placeholder} />
+                <Textarea name={f.name} required={f.required} placeholder={f.placeholder} className="rounded-xl bg-white/40 dark:bg-white/10" />
               ) : (
-                <Input name={f.name} required={f.required} placeholder={f.placeholder} type={f.type === "url" ? "url" : "text"} />
+                <Input name={f.name} required={f.required} placeholder={f.placeholder} type={f.type === "url" ? "url" : "text"} className="rounded-xl bg-white/40 dark:bg-white/10" />
               )}
             </div>
           ))}
-          <Button type="submit" disabled={loading} className="w-full">
+          <Button type="submit" disabled={loading} className="w-full gradient-btn">
             {loading ? "保存中..." : "保存"}
           </Button>
         </form>

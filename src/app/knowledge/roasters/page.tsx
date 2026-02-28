@@ -18,11 +18,11 @@ export default async function RoastersPage() {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {roasters.map((r) => (
-            <Card key={r.id}>
+            <Card key={r.id} className="glass-card border-0 hover:shadow-xl hover:shadow-purple-500/10 hover:scale-[1.02] transition-all">
               <CardHeader className="pb-2">
                 <CardTitle className="text-base flex items-center justify-between">
                   <span>{r.name}</span>
-                  <Badge variant="outline">{r.country}</Badge>
+                  <Badge variant="outline" className="rounded-full">{r.country}</Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-sm space-y-1">

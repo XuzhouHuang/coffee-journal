@@ -49,40 +49,29 @@ export function PurchasesList({ initialBeanPurchases, initialCafePurchases, stat
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <h1 className="text-2xl font-bold">消费记录</h1>
         <Link href="/purchases/cafe/new">
-          <Button><Plus className="h-4 w-4 mr-2" />添加咖啡店消费</Button>
+          <Button className="gradient-btn"><Plus className="h-4 w-4 mr-2" />添加咖啡店消费</Button>
         </Link>
       </div>
 
       {/* Stats cards */}
       <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardContent className="pt-4 pb-3">
-            <p className="text-sm text-muted-foreground">本月豆子消费</p>
-            <p className="text-2xl font-bold">¥{stats.monthBeans.toFixed(0)}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-4 pb-3">
-            <p className="text-sm text-muted-foreground">本月咖啡店消费</p>
-            <p className="text-2xl font-bold">¥{stats.monthCafe.toFixed(0)}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-4 pb-3">
-            <p className="text-sm text-muted-foreground">本月总消费</p>
-            <p className="text-2xl font-bold">¥{stats.monthTotal.toFixed(0)}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-4 pb-3">
-            <p className="text-sm text-muted-foreground">本月消费次数</p>
-            <p className="text-2xl font-bold">{stats.monthCount} 次</p>
-          </CardContent>
-        </Card>
+        {[
+          { label: "本月豆子消费", value: `¥${stats.monthBeans.toFixed(0)}`, gradient: "from-purple-500/20 to-purple-600/20" },
+          { label: "本月咖啡店消费", value: `¥${stats.monthCafe.toFixed(0)}`, gradient: "from-pink-500/20 to-pink-600/20" },
+          { label: "本月总消费", value: `¥${stats.monthTotal.toFixed(0)}`, gradient: "from-orange-400/20 to-orange-500/20" },
+          { label: "本月消费次数", value: `${stats.monthCount} 次`, gradient: "from-amber-400/20 to-amber-500/20" },
+        ].map((s) => (
+          <Card key={s.label} className="glass-card border-0">
+            <CardContent className="pt-4 pb-3">
+              <p className="text-sm text-muted-foreground">{s.label}</p>
+              <p className="text-2xl font-bold">{s.value}</p>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       {/* Monthly chart */}
-      <Card>
+      <Card className="glass-card border-0">
         <CardHeader>
           <CardTitle className="text-base">近6个月消费趋势</CardTitle>
         </CardHeader>
@@ -94,8 +83,8 @@ export function PurchasesList({ initialBeanPurchases, initialCafePurchases, stat
                 <YAxis />
                 <Tooltip formatter={(value) => `¥${value}`} />
                 <Legend />
-                <Bar dataKey="beans" name="豆子" fill="#3b82f6" />
-                <Bar dataKey="cafe" name="咖啡店" fill="#f97316" />
+                <Bar dataKey="beans" name="豆子" fill="#a855f7" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="cafe" name="咖啡店" fill="#ec4899" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -104,16 +93,16 @@ export function PurchasesList({ initialBeanPurchases, initialCafePurchases, stat
 
       <div className="flex gap-2">
         <Button
-          variant={tab === "beans" ? "default" : "outline"}
           onClick={() => setTab("beans")}
           size="sm"
+          className={tab === "beans" ? "gradient-btn" : "rounded-full bg-white/40 dark:bg-white/10 text-foreground hover:bg-white/60 dark:hover:bg-white/20"}
         >
           豆子购买 ({beanPurchases.length})
         </Button>
         <Button
-          variant={tab === "cafe" ? "default" : "outline"}
           onClick={() => setTab("cafe")}
           size="sm"
+          className={tab === "cafe" ? "gradient-btn" : "rounded-full bg-white/40 dark:bg-white/10 text-foreground hover:bg-white/60 dark:hover:bg-white/20"}
         >
           咖啡店消费 ({cafePurchases.length})
         </Button>
@@ -124,7 +113,7 @@ export function PurchasesList({ initialBeanPurchases, initialCafePurchases, stat
           {beanPurchases.length === 0 ? (
             <p className="text-muted-foreground text-center py-8">暂无豆子购买记录，去咖啡豆页面添加</p>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto glass-card p-4">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -137,7 +126,7 @@ export function PurchasesList({ initialBeanPurchases, initialCafePurchases, stat
                 </TableHeader>
                 <TableBody>
                   {beanPurchases.map((p) => (
-                    <TableRow key={p.id}>
+                    <TableRow key={p.id} className="hover:bg-white/30 dark:hover:bg-white/5">
                       <TableCell>{new Date(p.purchaseDate).toLocaleDateString("zh-CN")}</TableCell>
                       <TableCell>
                         {p.bean ? (
@@ -165,7 +154,7 @@ export function PurchasesList({ initialBeanPurchases, initialCafePurchases, stat
           ) : (
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {cafePurchases.map((p) => (
-                <Card key={p.id}>
+                <Card key={p.id} className="glass-card border-0 hover:shadow-xl hover:shadow-purple-500/10 hover:scale-[1.02] transition-all">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-base flex items-center justify-between">
                       <span>{p.cafeName}</span>
@@ -175,8 +164,8 @@ export function PurchasesList({ initialBeanPurchases, initialCafePurchases, stat
                   <CardContent className="text-sm space-y-1">
                     <p>{p.drinkName}</p>
                     <div className="flex flex-wrap gap-1">
-                      {p.drinkType && <Badge variant="outline">{p.drinkType}</Badge>}
-                      {p.location && <Badge variant="secondary">{p.location}</Badge>}
+                      {p.drinkType && <Badge variant="outline" className="rounded-full">{p.drinkType}</Badge>}
+                      {p.location && <Badge variant="secondary" className="rounded-full bg-purple-100/60 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">{p.location}</Badge>}
                     </div>
                     <div className="flex justify-between text-muted-foreground">
                       <span>{new Date(p.purchaseDate).toLocaleDateString("zh-CN")}</span>

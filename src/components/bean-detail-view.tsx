@@ -72,46 +72,46 @@ export function BeanDetailView({ initialBean }: BeanDetailViewProps) {
     <div className="space-y-6">
       <div className="flex items-center gap-2">
         <Link href="/beans">
-          <Button variant="ghost" size="icon"><ArrowLeft className="h-4 w-4" /></Button>
+          <Button variant="ghost" size="icon" className="rounded-xl"><ArrowLeft className="h-4 w-4" /></Button>
         </Link>
         <h1 className="text-2xl font-bold">{bean.name}</h1>
       </div>
 
-      <Card>
+      <Card className="glass-card border-0">
         <CardContent className="pt-6 space-y-3">
           <div className="flex flex-wrap gap-2">
-            {bean.region && <Badge variant="secondary">{bean.region.country} - {bean.region.region}</Badge>}
-            {bean.variety && <Badge variant="outline">{bean.variety.name}</Badge>}
-            {bean.roastLevel && <Badge>{bean.roastLevel}</Badge>}
-            {bean.process && <Badge variant="outline">{bean.process}</Badge>}
+            {bean.region && <Badge variant="secondary" className="rounded-full bg-purple-100/60 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">{bean.region.country} - {bean.region.region}</Badge>}
+            {bean.variety && <Badge variant="outline" className="rounded-full">{bean.variety.name}</Badge>}
+            {bean.roastLevel && <Badge className="rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0">{bean.roastLevel}</Badge>}
+            {bean.process && <Badge variant="outline" className="rounded-full">{bean.process}</Badge>}
           </div>
           {bean.roaster && <p className="text-sm">烘焙商: {bean.roaster.name} ({bean.roaster.country})</p>}
           {bean.flavorNotes && <p className="text-sm">风味: {bean.flavorNotes}</p>}
           {bean.variety?.flavor && <p className="text-sm text-muted-foreground">品种风味: {bean.variety.flavor}</p>}
-          {bean.score != null && <p className="text-sm font-medium">评分: {bean.score}</p>}
+          {bean.score != null && <p className="text-sm font-semibold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">评分: {bean.score}</p>}
         </CardContent>
       </Card>
 
-      <Separator />
+      <Separator className="opacity-30" />
 
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">购买记录</h2>
           <Dialog open={purchaseOpen} onOpenChange={(open) => { setPurchaseOpen(open); if (open) setPurchaseKey((k) => k + 1); }}>
             <DialogTrigger asChild>
-              <Button size="sm"><Plus className="h-4 w-4 mr-1" />添加购买</Button>
+              <Button size="sm" className="gradient-btn"><Plus className="h-4 w-4 mr-1" />添加购买</Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="glass-card">
               <DialogHeader><DialogTitle>添加购买记录</DialogTitle></DialogHeader>
               <form key={purchaseKey} onSubmit={handlePurchase} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <div><Label>价格 (元) *</Label><Input name="price" type="number" step="0.01" required /></div>
-                  <div><Label>重量 (g) *</Label><Input name="weight" type="number" required /></div>
+                  <div><Label>价格 (元) *</Label><Input name="price" type="number" step="0.01" required className="rounded-xl bg-white/40 dark:bg-white/10" /></div>
+                  <div><Label>重量 (g) *</Label><Input name="weight" type="number" required className="rounded-xl bg-white/40 dark:bg-white/10" /></div>
                 </div>
-                <div><Label>购买日期 *</Label><Input name="purchaseDate" type="date" required defaultValue={todayLocal()} /></div>
-                <div><Label>购买渠道</Label><Input name="source" placeholder="淘宝/官网/线下..." /></div>
-                <div><Label>备注</Label><Textarea name="notes" /></div>
-                <Button type="submit" className="w-full">保存</Button>
+                <div><Label>购买日期 *</Label><Input name="purchaseDate" type="date" required defaultValue={todayLocal()} className="rounded-xl bg-white/40 dark:bg-white/10" /></div>
+                <div><Label>购买渠道</Label><Input name="source" placeholder="淘宝/官网/线下..." className="rounded-xl bg-white/40 dark:bg-white/10" /></div>
+                <div><Label>备注</Label><Textarea name="notes" className="rounded-xl bg-white/40 dark:bg-white/10" /></div>
+                <Button type="submit" className="w-full gradient-btn">保存</Button>
               </form>
             </DialogContent>
           </Dialog>
@@ -119,7 +119,7 @@ export function BeanDetailView({ initialBean }: BeanDetailViewProps) {
         {bean.purchases.length === 0 ? (
           <p className="text-muted-foreground text-sm">暂无购买记录</p>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto glass-card p-4">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -132,7 +132,7 @@ export function BeanDetailView({ initialBean }: BeanDetailViewProps) {
               </TableHeader>
               <TableBody>
                 {bean.purchases.map((p) => (
-                  <TableRow key={p.id}>
+                  <TableRow key={p.id} className="hover:bg-white/30 dark:hover:bg-white/5">
                     <TableCell>{new Date(p.purchaseDate).toLocaleDateString("zh-CN")}</TableCell>
                     <TableCell>¥{p.price}</TableCell>
                     <TableCell>{p.weight}g</TableCell>
@@ -146,13 +146,13 @@ export function BeanDetailView({ initialBean }: BeanDetailViewProps) {
         )}
       </div>
 
-      <Separator />
+      <Separator className="opacity-30" />
 
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">冲煮记录</h2>
           <Link href={`/beans/${bean.id}/brew`}>
-            <Button size="sm"><Plus className="h-4 w-4 mr-1" />添加冲煮</Button>
+            <Button size="sm" className="gradient-btn"><Plus className="h-4 w-4 mr-1" />添加冲煮</Button>
           </Link>
         </div>
         {bean.brewLogs.length === 0 ? (
@@ -160,11 +160,11 @@ export function BeanDetailView({ initialBean }: BeanDetailViewProps) {
         ) : (
           <div className="grid gap-3 sm:grid-cols-2">
             {bean.brewLogs.map((log) => (
-              <Card key={log.id}>
+              <Card key={log.id} className="glass-card border-0 hover:shadow-xl hover:shadow-purple-500/10 transition-all">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm flex items-center justify-between">
                     <span>{log.brewMethod}</span>
-                    {log.rating != null && <Badge variant="secondary">⭐ {log.rating}</Badge>}
+                    {log.rating != null && <Badge variant="secondary" className="rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0">⭐ {log.rating}</Badge>}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-sm space-y-1">

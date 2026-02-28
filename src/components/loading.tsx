@@ -1,10 +1,9 @@
-import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function Loading({ className }: { className?: string }) {
   return (
     <div className={cn("flex items-center justify-center py-8", className)}>
-      <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      <div className="h-8 w-8 rounded-full border-4 border-purple-200 border-t-purple-500 animate-spin" />
     </div>
   );
 }
