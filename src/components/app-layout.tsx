@@ -31,7 +31,7 @@ function NavLinks({ onClick }: { onClick?: () => void }) {
           href={item.href}
           onClick={onClick}
           className={cn(
-            "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all",
+            "flex items-center gap-3 rounded-xl px-3 py-2.5 text-base font-semibold transition-all",
             isActive
               ? "bg-gradient-to-r from-teal-400 to-emerald-400 text-white font-medium shadow-md shadow-teal-500/20"
               : "text-muted-foreground hover:bg-teal-50/60 hover:text-foreground dark:hover:bg-white/5"
@@ -55,7 +55,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <aside className="hidden md:flex w-60 flex-col bg-white/40 dark:bg-white/5 backdrop-blur-xl border-r border-white/20 p-4">
         <Link href="/" className="flex items-center gap-2 mb-6 px-3">
           <span className="text-2xl">☕</span>
-          <span className="text-lg font-bold text-foreground font-[family-name:var(--font-brand)]">咖啡日志</span>
+          <span className="text-lg font-bold text-foreground font-[family-name:var(--font-brand)]">Coffee Journal</span>
         </Link>
         <NavLinks />
       </aside>
@@ -66,7 +66,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <header className="md:hidden flex items-center justify-between bg-white/40 dark:bg-white/5 backdrop-blur-xl border-b border-white/20 p-4">
           <Link href="/" className="flex items-center gap-2">
             <span className="text-xl">☕</span>
-            <span className="font-bold text-foreground font-[family-name:var(--font-brand)]">咖啡日志</span>
+            <span className="font-bold text-foreground font-[family-name:var(--font-brand)]">Coffee Journal</span>
           </Link>
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
@@ -77,7 +77,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <SheetContent side="left" className="w-60 bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl border-white/20">
               <div className="flex items-center gap-2 mb-6 px-3 pt-4">
                 <span className="text-2xl">☕</span>
-                <span className="text-lg font-bold text-foreground font-[family-name:var(--font-brand)]">咖啡日志</span>
+                <span className="text-lg font-bold text-foreground font-[family-name:var(--font-brand)]">Coffee Journal</span>
               </div>
               <NavLinks onClick={() => setOpen(false)} />
             </SheetContent>
