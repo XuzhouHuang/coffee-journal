@@ -88,7 +88,7 @@
   }
   body {
     @apply text-foreground min-h-screen;
-    font-family: var(--font-brand), sans-serif;
+    font-family: "Microsoft YaHei", "微软雅黑", var(--font-brand), sans-serif;
     background: linear-gradient(160deg, #0a0f1a 0%, #141b2d 40%, #0d1520 70%, #0f1825 100%);
   }
   h1, h2, h3, h4, [data-slot="card-title"] {
