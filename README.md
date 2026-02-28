@@ -338,15 +338,3 @@ OPENROUTER_API_KEY=sk-or-...  # Phase 6 AI拍照识别用
 2. **📊 冲煮参数工作流（来自 Beanconqueror）**
    - 让用户自定义参数顺序（先磨豆粗细还是先粉量？）
    - 更贴合个人习惯
-
-3. **🏪 咖啡店签到 + 定位（来自 Brewlog）**
-   - 集成 Foursquare/Google Places
-   - 自动补全咖啡店信息
-
-4. **💧 水质记录（来自 Beanconqueror）**
-   - 记录水的 TDS、矿物质含量
-   - 对风味影响大，进阶功能
-
-5. **📦 库存追踪（来自 Beanconqueror）**
-   - 自动计算剩余豆量
-   - 快用完时提醒补货
