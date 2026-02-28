@@ -58,8 +58,8 @@ export default function BeansPage() {
 
   const filtered = beans.filter((b) => {
     if (search && !b.name.toLowerCase().includes(search.toLowerCase())) return false;
-    if (filterRegion && b.region?.id !== parseInt(filterRegion)) return false;
-    if (filterVariety && b.variety?.id !== parseInt(filterVariety)) return false;
+    if (filterRegion && filterRegion !== "all" && b.region?.id !== parseInt(filterRegion)) return false;
+    if (filterVariety && filterVariety !== "all" && b.variety?.id !== parseInt(filterVariety)) return false;
     return true;
   });
 

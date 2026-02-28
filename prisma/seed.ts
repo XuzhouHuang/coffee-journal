@@ -4,16 +4,16 @@ const prisma = new PrismaClient();
 
 async function main() {
   const regions = [
-    { country: "埃塞俄比亚", region: "Ethiopia" },
-    { country: "哥伦比亚", region: "Colombia" },
-    { country: "巴西", region: "Brazil" },
-    { country: "肯尼亚", region: "Kenya" },
-    { country: "巴拿马", region: "Panama" },
-    { country: "危地马拉", region: "Guatemala" },
-    { country: "哥斯达黎加", region: "Costa Rica" },
-    { country: "也门", region: "Yemen" },
-    { country: "印度尼西亚", region: "Indonesia" },
-    { country: "洪都拉斯", region: "Honduras" },
+    { country: "埃塞俄比亚", region: "耶加雪菲" },
+    { country: "哥伦比亚", region: "慧兰" },
+    { country: "巴西", region: "米纳斯吉拉斯" },
+    { country: "肯尼亚", region: "涅里" },
+    { country: "巴拿马", region: "波奎特" },
+    { country: "危地马拉", region: "安提瓜" },
+    { country: "哥斯达黎加", region: "塔拉珠" },
+    { country: "也门", region: "摩卡" },
+    { country: "印度尼西亚", region: "苏门答腊" },
+    { country: "洪都拉斯", region: "圣芭芭拉" },
   ];
 
   const varieties = [

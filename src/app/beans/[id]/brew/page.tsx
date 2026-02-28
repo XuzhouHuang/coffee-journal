@@ -31,6 +31,11 @@ export default function BrewLogPage() {
     const data = Object.fromEntries(form.entries());
     data.brewMethod = method;
 
+    if (!method) {
+      toast.error("请选择冲煮方式");
+      return;
+    }
+
     const res = await fetch(`/api/beans/${id}/brew-logs`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
