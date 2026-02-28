@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Region {
+  id        Int      @id @default(autoincrement())
+  country   String
+  region    String
+  subRegion String?
+  altitude  String?
+  climate   String?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  beans     Bean[]
+}
+
+model Variety {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  flavor      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  beans       Bean[]
+}
+
+model Roaster {
+  id        Int      @id @default(autoincrement())
+  name      String
+  country   String
+  specialty String?
+  website   String?
+  shopUrl   String?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  beans     Bean[]
+}
+
+model Bean {
+  id          Int            @id @default(autoincrement())
+  name        String
+  roasterId   Int?
+  regionId    Int?
+  varietyId    Int?
+  process     String?
+  roastLevel  String?
+  flavorNotes String?
+  score       Float?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  roaster     Roaster?       @relation(fields: [roasterId], references: [id])
+  region      Region?        @relation(fields: [regionId], references: [id])
+  variety     Variety?       @relation(fields: [varietyId], references: [id])
+  purchases   BeanPurchase[]
+  brewLogs    BrewLog[]
+}
+
+model BeanPurchase {
+  id           Int      @id @default(autoincrement())
+  beanId       Int
+  price        Float
+  weight       Int
+  purchaseDate DateTime
+  source       String?
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  bean         Bean     @relation(fields: [beanId], references: [id])
+}
+
+model BrewLog {
+  id          Int      @id @default(autoincrement())
+  beanId      Int
+  brewMethod  String
+  dose        Float?
+  waterAmount Float?
+  ratio       String?
+  grindSize   String?
+  waterTemp   Int?
+  brewTime    String?
+  rating      Float?
+  notes       String?
+  brewDate    DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  bean        Bean     @relation(fields: [beanId], references: [id])
+}
+
+model CafePurchase {
+  id           Int      @id @default(autoincrement())
+  cafeName     String
+  location     String?
+  drinkName    String
+  drinkType    String?
+  price        Float
+  purchaseDate DateTime
+  rating       Float?
+  notes        String?
+  photo        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
