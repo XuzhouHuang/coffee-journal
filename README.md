@@ -64,9 +64,9 @@
 |---|---|---|
 | id | Int (PK) | 主键 |
 | name | String | 豆名 |
-| roasterId | Int (FK) | 烘焙商 |
-| regionId | Int (FK) | 产区 |
-| varietyId | Int (FK) | 品种 |
+| roasterId | Int? (FK) | 烘焙商（可选） |
+| regionId | Int? (FK) | 产区（可选） |
+| varietyId | Int? (FK) | 品种（可选） |
 | process | String? | 处理法 |
 | roastLevel | String? | 烘焙度 |
 | flavorNotes | String? | 风味描述 |
@@ -80,19 +80,33 @@
 | price | Float | 价格 |
 | weight | Int | 重量(g) |
 | purchaseDate | DateTime | 购买日期 |
-| brewMethod | String? | 冲煮方式 |
+| source | String? | 购买渠道（淘宝/官网/线下） |
+| notes | String? | 备注 |
+
+### BrewLog 冲煮记录
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| id | Int (PK) | 主键 |
+| beanId | Int (FK) | 咖啡豆 |
+| brewMethod | String | 冲煮方式（手冲/摩卡壶/法压等） |
+| dose | Float? | 粉量(g) |
+| waterAmount | Float? | 水量(ml) |
 | ratio | String? | 粉水比 |
 | grindSize | String? | 研磨度 |
 | waterTemp | Int? | 水温 |
-| rating | Float? | 评分 |
+| brewTime | String? | 冲煮时间 |
+| rating | Float? | 评分(1-5) |
 | notes | String? | 品鉴笔记 |
+| brewDate | DateTime | 冲煮日期 |
 
 ### CafePurchase 咖啡店消费
 | 字段 | 类型 | 说明 |
 |---|---|---|
 | id | Int (PK) | 主键 |
 | cafeName | String | 店名 |
+| location | String? | 城市/地址 |
 | drinkName | String | 饮品名 |
+| drinkType | String? | 饮品类型（手冲/拿铁/美式/冷萃等） |
 | price | Float | 价格 |
 | purchaseDate | DateTime | 日期 |
 | rating | Float? | 评分 |
@@ -117,7 +131,9 @@
 /beans 我的咖啡豆
 ├── 豆子列表 + 筛选
 ├── 添加新豆子
-└── 豆子详情（含冲煮记录）
+├── 豆子详情
+├── 购买记录
+└── 冲煮记录（每次冲煮的参数和品鉴）
 
 /purchases 消费记录
 ├── 豆子购买记录
@@ -164,12 +180,19 @@ coffee-journal/
 
 | 阶段 | 内容 | 预估时间 |
 |---|---|---|
-| Phase 1 | 数据模型 + 基础 CRUD | 2-3天 |
-| Phase 2 | 知识库页面（产区/品种/烘焙商） | 2天 |
-| Phase 3 | 购买记录 + 咖啡店消费 | 2天 |
-| Phase 4 | Dashboard + 统计图表 | 2天 |
-| Phase 5 | 美化 + 搜索 + 筛选 | 1-2天 |
-| **Phase 6** | **🤖 AI 拍照识别咖啡袋自动录入** | **2-3天** |
+| Phase 1 | 项目初始化 + 数据模型 + Prisma schema | 1天 |
+| Phase 2 | 咖啡豆 CRUD + 购买记录 + 冲煮记录（核心高频功能） | 2-3天 |
+| Phase 3 | 咖啡店消费记录 + 消费统计 | 1-2天 |
+| Phase 4 | 知识库页面（产区/品种/烘焙商）+ 种子数据 | 2天 |
+| Phase 5 | Dashboard 首页 + 统计图表 | 2天 |
+| Phase 6 | 搜索 + 筛选 + UI 美化 | 1-2天 |
+| **Phase 7** | **🤖 AI 拍照识别咖啡袋自动录入** | **2-3天** |
+
+> **调整说明：**
+> - 先做高频功能（记录豆子/冲煮/消费），再做低频功能（知识库）
+> - 购买记录和冲煮记录拆开，一袋豆子可以记多次冲煮
+> - Dashboard 放到最后，因为它依赖前面所有数据
+> - 知识库加入种子数据（常见产区、品种预填），避免空页面
 
 ### Phase 6 详情：AI 拍照识别
 
