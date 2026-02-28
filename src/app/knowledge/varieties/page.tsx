@@ -16,7 +16,7 @@ export default async function VarietiesPage() {
       {varieties.length === 0 ? (
         <p className="text-muted-foreground text-center py-8">暂无品种数据，点击右上角添加</p>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {varieties.map((v) => (
             <Card key={v.id} className="glass-card border-0 hover:shadow-xl hover:shadow-blue-500/10 hover:scale-[1.02] transition-all">
               <CardHeader className="pb-2">

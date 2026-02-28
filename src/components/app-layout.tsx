@@ -52,7 +52,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen">
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex w-60 flex-col bg-[rgba(10,15,26,0.7)] backdrop-blur-xl border-r border-white/[0.08] p-4">
+      <aside className="hidden md:flex w-64 flex-col bg-[rgba(10,15,26,0.7)] backdrop-blur-xl border-r border-white/[0.08] p-4">
         <Link href="/" className="flex items-center gap-2 mb-6 px-3">
           <span className="text-2xl">☕</span>
           <span className="text-lg font-bold text-foreground font-[family-name:var(--font-brand)]">Coffee Journal</span>
@@ -84,7 +84,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </Sheet>
         </header>
 
-        <main className="flex-1 p-4 md:p-6">{children}</main>
+        <main className="flex-1 p-6 md:p-10">{children}</main>
       </div>
     </div>
   );
