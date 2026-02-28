@@ -122,10 +122,14 @@
   }
   body {
     @apply text-foreground min-h-screen;
+    font-family: var(--font-brand), sans-serif;
     background: linear-gradient(160deg, #c9e8f0 0%, #b8e6d0 40%, #d4eee8 70%, #e0f0ea 100%);
   }
   .dark body {
     background: linear-gradient(135deg, #0c1a2a 0%, #0f2b2e 50%, #0a1f1f 100%);
+  }
+  h1, h2, h3, h4, [data-slot="card-title"] {
+    font-weight: 700;
   }
 }
 

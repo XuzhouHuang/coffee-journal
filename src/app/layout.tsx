@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { ZCOOL_XiaoWei } from "next/font/google";
+import { LXGW_WenKai_TC } from "next/font/google";
 import "./globals.css";
 import { AppLayout } from "@/components/app-layout";
 import { Toaster } from "@/components/ui/sonner";
 
-const brandFont = ZCOOL_XiaoWei({ subsets: ["latin"], weight: "400", variable: "--font-brand" });
+const brandFont = LXGW_WenKai_TC({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-brand" });
 
 export const metadata: Metadata = {
   title: "咖啡日志",
