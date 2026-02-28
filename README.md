@@ -20,8 +20,10 @@
 | 语言 | TypeScript | 类型安全 |
 | UI | TailwindCSS + shadcn/ui | 快速出好看的界面 |
 | 图表 | Recharts | React 图表库，统计页面用 |
-| 数据库 | SQLite + Prisma | 零配置，轻量 |
-| 部署 | Vercel 或本地 | 免费，一键部署 |
+| 数据库 | Azure SQL (Serverless) 或 PostgreSQL Flexible Server | 云原生，按需计费 |
+| 存储 | Azure Blob Storage | 图片/照片存储 |
+| 部署 | Azure Container Apps | 按需缩放，闲时近零成本 |
+| CI/CD | GitHub Actions → Azure | 推代码自动部署 |
 
 ---
 
@@ -189,6 +191,96 @@ coffee-journal/
 **参考：** Brewlog (https://github.com/jnsgruk/brewlog) 的 bag scanning 实现
 
 **优先级：** 下一次迭代加入（Phase 1-5 完成后）
+
+---
+
+## Azure 部署方案
+
+### 架构图
+
+```
+GitHub (Push) → GitHub Actions (CI/CD)
+                     ↓
+            Azure Container Apps ← Azure Container Registry
+                     ↓
+              Next.js App (前端+API)
+                     ↓
+         ┌──────────┼──────────┐
+         ↓          ↓          ↓
+  Azure Database   Blob      OpenRouter
+  for PostgreSQL  Storage     (AI识别)
+  (Flexible)     (照片)
+```
+
+### 各组件选型 & 月成本估算（个人使用）
+
+| 组件 | Azure 服务 | 规格 | 月估算费用 |
+|---|---|---|---|
+| 应用托管 | **Container Apps** | Consumption Plan，按需缩放 | ~$0-5（低流量几乎免费） |
+| 数据库 | **PostgreSQL Flexible Server** | Burstable B1ms (1vCPU, 2GB) | ~$12-15 |
+| 图片存储 | **Blob Storage** | Hot tier, <1GB | ~$0.02 |
+| 容器镜像 | **Container Registry** | Basic | ~$5 |
+| 域名/HTTPS | **Container Apps 自带** | 免费 HTTPS 证书 | $0 |
+| **总计** | | | **~$17-25/月** |
+
+### 更省钱的替代方案
+
+| 组件 | 省钱方案 | 月估算费用 |
+|---|---|---|
+| 应用托管 | **Azure App Service** Free/B1 | $0-13 |
+| 数据库 | **SQLite + 持久化 Volume** | $0（嵌入App内） |
+| **总计** | | **~$0-13/月** |
+
+> 💡 如果不需要高并发，SQLite + App Service 最省钱。
+> PostgreSQL 方案更专业，适合后续扩展。
+
+### 部署配置
+
+#### Dockerfile
+```dockerfile
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npx prisma generate
+RUN npm run build
+
+FROM node:20-alpine AS runner
+WORKDIR /app
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
+EXPOSE 3000
+CMD ["node", "server.js"]
+```
+
+#### GitHub Actions (.github/workflows/deploy.yml)
+```yaml
+name: Deploy to Azure
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - run: |
+          az acr build --registry $ACR_NAME --image coffee-journal:${{ github.sha }} .
+          az containerapp update --name coffee-journal --resource-group $RG \
+            --image $ACR_NAME.azurecr.io/coffee-journal:${{ github.sha }}
+```
+
+### 环境变量
+```env
+DATABASE_URL=postgresql://user:pass@xxx.postgres.database.azure.com:5432/coffeejournal
+AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=https;AccountName=...
+OPENROUTER_API_KEY=sk-or-...  # Phase 6 AI拍照识别用
+```
 
 ---
 
