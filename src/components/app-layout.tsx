@@ -31,13 +31,13 @@ function NavLinks({ onClick }: { onClick?: () => void }) {
           href={item.href}
           onClick={onClick}
           className={cn(
-            "flex items-center gap-3 rounded-xl px-3 py-2.5 text-base font-semibold transition-all",
+            "flex items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-bold transition-all",
             isActive
-              ? "bg-gradient-to-r from-teal-400 to-emerald-400 text-white font-medium shadow-md shadow-teal-500/20"
+              ? "bg-gradient-to-r from-teal-400 to-emerald-400 text-white shadow-md shadow-teal-500/20"
               : "text-muted-foreground hover:bg-teal-50/60 hover:text-foreground dark:hover:bg-white/5"
           )}
         >
-          <item.icon className="h-4 w-4" />
+          <item.icon className="h-5 w-5" />
           {item.label}
         </Link>
         );

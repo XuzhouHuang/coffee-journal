@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 const brandFont = LXGW_WenKai_TC({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-brand" });
 
 export const metadata: Metadata = {
-  title: "咖啡日志",
+  title: "Coffee Journal",
   description: "个人咖啡知识库 + 消费记录追踪器",
 };
 
