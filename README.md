@@ -18,12 +18,15 @@
 |---|---|---|
 | 框架 | Next.js 15 | 全栈一体，部署简单 |
 | 语言 | TypeScript | 类型安全 |
-| UI | TailwindCSS + shadcn/ui | 快速出好看的界面 |
+| UI | TailwindCSS + shadcn/ui | 快速出好看的界面，内置响应式 |
 | 图表 | Recharts | React 图表库，统计页面用 |
+| 认证 | NextAuth.js | 简单密码登录，保护个人数据 |
 | 数据库 | Azure SQL (Serverless) 或 PostgreSQL Flexible Server | 云原生，按需计费 |
 | 存储 | Azure Blob Storage | 图片/照片存储 |
 | 部署 | Azure Container Apps | 按需缩放，闲时近零成本 |
 | CI/CD | GitHub Actions → Azure | 推代码自动部署 |
+
+> **📱 移动端适配：** 所有页面使用 TailwindCSS 响应式设计（mobile-first），手机上随时记录冲煮参数。
 
 ---
 
@@ -39,6 +42,8 @@
 | altitude | String? | 海拔 |
 | climate | String? | 气候 |
 | notes | String? | 备注 |
+| createdAt | DateTime | 创建时间 |
+| updatedAt | DateTime | 更新时间 |
 
 ### Variety 品种
 | 字段 | 类型 | 说明 |
@@ -47,6 +52,8 @@
 | name | String | 品种名 |
 | description | String? | 描述 |
 | flavor | String? | 风味特征 |
+| createdAt | DateTime | 创建时间 |
+| updatedAt | DateTime | 更新时间 |
 
 ### Roaster 烘焙商
 | 字段 | 类型 | 说明 |
@@ -58,6 +65,8 @@
 | website | String? | 官网 |
 | shopUrl | String? | 购买链接 |
 | notes | String? | 备注 |
+| createdAt | DateTime | 创建时间 |
+| updatedAt | DateTime | 更新时间 |
 
 ### Bean 咖啡豆
 | 字段 | 类型 | 说明 |
@@ -71,6 +80,8 @@
 | roastLevel | String? | 烘焙度 |
 | flavorNotes | String? | 风味描述 |
 | score | Float? | 评分 |
+| createdAt | DateTime | 创建时间 |
+| updatedAt | DateTime | 更新时间 |
 
 ### BeanPurchase 豆子购买记录
 | 字段 | 类型 | 说明 |
@@ -82,6 +93,8 @@
 | purchaseDate | DateTime | 购买日期 |
 | source | String? | 购买渠道（淘宝/官网/线下） |
 | notes | String? | 备注 |
+| createdAt | DateTime | 创建时间 |
+| updatedAt | DateTime | 更新时间 |
 
 ### BrewLog 冲煮记录
 | 字段 | 类型 | 说明 |
@@ -98,6 +111,8 @@
 | rating | Float? | 评分(1-5) |
 | notes | String? | 品鉴笔记 |
 | brewDate | DateTime | 冲煮日期 |
+| createdAt | DateTime | 创建时间 |
+| updatedAt | DateTime | 更新时间 |
 
 ### CafePurchase 咖啡店消费
 | 字段 | 类型 | 说明 |
@@ -112,6 +127,8 @@
 | rating | Float? | 评分 |
 | notes | String? | 备注 |
 | photo | String? | 照片路径 |
+| createdAt | DateTime | 创建时间 |
+| updatedAt | DateTime | 更新时间 |
 
 ---
 
@@ -119,9 +136,9 @@
 
 ```
 / 首页（Dashboard）
-├── 本月咖啡消费总览
-├── 最近购买记录
-└── 咖啡豆库存概览
+├── 本月咖啡消费总览（豆子+咖啡店合计）
+├── 最近购买/冲煮记录
+└── 常用豆子快捷入口
 
 /knowledge 知识库
 ├── /regions     产区浏览（按国家→产区→地块）
@@ -135,15 +152,12 @@
 ├── 购买记录
 └── 冲煮记录（每次冲煮的参数和品鉴）
 
-/purchases 消费记录
+/purchases 消费记录 + 统计
 ├── 豆子购买记录
 ├── 咖啡店消费记录
-└── 年度/月度消费统计图表
-
-/stats 统计分析
-├── 年度消费报告（总花费、最爱品种、最常去的店）
-├── 冲煮偏好分析
-└── 消费趋势图
+├── 年度/月度消费统计图表
+├── 消费趋势图
+└── 冲煮偏好分析
 ```
 
 ---
@@ -153,22 +167,36 @@
 ```
 coffee-journal/
 ├── prisma/
-│   └── schema.prisma        # 数据模型
+│   ├── schema.prisma        # 数据模型
+│   └── seed.ts              # 种子数据（产区/品种）
 ├── src/
-│   ├── app/                  # Next.js App Router
+│   ├── app/
 │   │   ├── page.tsx          # 首页 Dashboard
+│   │   ├── layout.tsx        # 全局布局 + 导航
 │   │   ├── knowledge/        # 知识库页面
 │   │   ├── beans/            # 咖啡豆管理
-│   │   ├── purchases/        # 消费记录
-│   │   └── stats/            # 统计分析
-│   ├── components/           # 通用组件
-│   │   ├── ui/               # 基础 UI 组件
+│   │   ├── purchases/        # 消费记录 + 统计
+│   │   ├── api/              # API Routes
+│   │   │   ├── beans/        # 咖啡豆 CRUD
+│   │   │   ├── brew-logs/    # 冲煮记录 CRUD
+│   │   │   ├── purchases/    # 购买记录 CRUD
+│   │   │   ├── cafe/         # 咖啡店消费 CRUD
+│   │   │   └── auth/         # 认证（NextAuth.js）
+│   │   └── login/            # 登录页
+│   ├── components/
+│   │   ├── ui/               # shadcn/ui 基础组件
 │   │   ├── charts/           # 图表组件
 │   │   └── forms/            # 表单组件
 │   ├── lib/
 │   │   ├── db.ts             # Prisma 客户端
+│   │   ├── auth.ts           # 认证配置
 │   │   └── utils.ts          # 工具函数
 │   └── types/                # TypeScript 类型
+├── public/                   # 静态资源
+├── .env.local                # 本地环境变量
+├── .env.example              # 环境变量模板
+├── Dockerfile
+├── docker-compose.yml        # 本地开发用
 ├── package.json
 ├── tailwind.config.ts
 └── tsconfig.json
@@ -180,7 +208,7 @@ coffee-journal/
 
 | 阶段 | 内容 | 预估时间 |
 |---|---|---|
-| Phase 1 | 项目初始化 + 数据模型 + Prisma schema | 1天 |
+| Phase 1 | 项目初始化 + 数据模型 + Prisma schema + 认证 | 1天 |
 | Phase 2 | 咖啡豆 CRUD + 购买记录 + 冲煮记录（核心高频功能） | 2-3天 |
 | Phase 3 | 咖啡店消费记录 + 消费统计 | 1-2天 |
 | Phase 4 | 知识库页面（产区/品种/烘焙商）+ 种子数据 | 2天 |
@@ -350,7 +378,7 @@ OPENROUTER_API_KEY=sk-or-...  # Phase 6 AI拍照识别用
 | 部署难度 | 简单（Vercel） | 简单（单二进制） | 复杂（App Store） |
 | AI 功能 | 可加 | ✅ 拍照识别 | ❌ |
 | 蓝牙秤 | ❌ | ❌ | ✅ |
-| 咖啡店签到 | ✅ 我们有 | ✅ Foursquare | ❌ |
+| 咖啡店签到 | ❌ | ✅ Foursquare | ❌ |
 
 ### 从开源项目学到的优化点
 
@@ -361,3 +389,28 @@ OPENROUTER_API_KEY=sk-or-...  # Phase 6 AI拍照识别用
 2. **📊 冲煮参数工作流（来自 Beanconqueror）**
    - 让用户自定义参数顺序（先磨豆粗细还是先粉量？）
    - 更贴合个人习惯
+
+---
+
+## 本地开发
+
+```bash
+# 1. 克隆项目
+git clone https://github.com/XuzhouHuang/coffee-journal.git
+cd coffee-journal
+
+# 2. 安装依赖
+npm install
+
+# 3. 配置环境变量
+cp .env.example .env.local
+# 编辑 .env.local，填入数据库连接字符串
+
+# 4. 初始化数据库
+npx prisma migrate dev
+npx prisma db seed  # 预填产区/品种种子数据
+
+# 5. 启动开发服务器
+npm run dev
+# 打开 http://localhost:3000
+```
