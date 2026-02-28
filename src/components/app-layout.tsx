@@ -21,20 +21,25 @@ function NavLinks({ onClick }: { onClick?: () => void }) {
   const pathname = usePathname();
   return (
     <nav className="flex flex-col gap-1">
-      {navItems.map((item) => (
+      {navItems.map((item) => {
+        const isActive = item.href === "/"
+          ? pathname === "/"
+          : pathname.startsWith(item.href);
+        return (
         <Link
           key={item.href}
           href={item.href}
           onClick={onClick}
           className={cn(
             "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-accent",
-            pathname === item.href ? "bg-accent font-medium" : "text-muted-foreground"
+            isActive ? "bg-accent font-medium" : "text-muted-foreground"
           )}
         >
           <item.icon className="h-4 w-4" />
           {item.label}
         </Link>
-      ))}
+        );
+      })}
     </nav>
   );
 }

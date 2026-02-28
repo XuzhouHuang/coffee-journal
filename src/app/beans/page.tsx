@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/db";
 import { BeansList } from "@/components/beans-list";
 
+export const dynamic = "force-dynamic";
+
 export default async function BeansPage() {
   const [beansRaw, meta] = await Promise.all([
     prisma.bean.findMany({

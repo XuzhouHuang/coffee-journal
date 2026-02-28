@@ -1,11 +1,14 @@
 import { prisma } from "@/lib/db";
 import { PurchasesList } from "@/components/purchases-list";
 
+export const dynamic = "force-dynamic";
+
 export default async function PurchasesPage() {
   const now = new Date();
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
 
-  const [beanPurchasesRaw, cafePurchasesRaw, monthBeanAgg, monthCafeAgg, monthBeanCount, monthCafeCount] = await Promise.all([
+  const [beanPurchasesRaw, cafePurchasesRaw, monthBeanAgg, monthCafeAgg, monthBeanCount, monthCafeCount, beanPricesRaw, cafePricesRaw] = await Promise.all([
     prisma.beanPurchase.findMany({
       include: { bean: true },
       orderBy: { purchaseDate: "desc" },
@@ -25,21 +28,39 @@ export default async function PurchasesPage() {
     }),
     prisma.beanPurchase.count({ where: { purchaseDate: { gte: startOfMonth } } }),
     prisma.cafePurchase.count({ where: { purchaseDate: { gte: startOfMonth } } }),
+    prisma.beanPurchase.findMany({
+      where: { purchaseDate: { gte: sixMonthsAgo } },
+      select: { price: true, purchaseDate: true },
+    }),
+    prisma.cafePurchase.findMany({
+      where: { purchaseDate: { gte: sixMonthsAgo } },
+      select: { price: true, purchaseDate: true },
+    }),
   ]);
 
-  // Monthly chart data: last 6 months via DB aggregation
+  function monthKey(d: Date): string {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+  }
+
+  const beanByMonth = new Map<string, number>();
+  const cafeByMonth = new Map<string, number>();
+  for (const p of beanPricesRaw) {
+    const k = monthKey(p.purchaseDate);
+    beanByMonth.set(k, (beanByMonth.get(k) || 0) + p.price);
+  }
+  for (const p of cafePricesRaw) {
+    const k = monthKey(p.purchaseDate);
+    cafeByMonth.set(k, (cafeByMonth.get(k) || 0) + p.price);
+  }
+
   const monthlyData: { month: string; beans: number; cafe: number }[] = [];
   for (let i = 5; i >= 0; i--) {
-    const start = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    const end = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
-    const [beanMonth, cafeMonth] = await Promise.all([
-      prisma.beanPurchase.aggregate({ _sum: { price: true }, where: { purchaseDate: { gte: start, lt: end } } }),
-      prisma.cafePurchase.aggregate({ _sum: { price: true }, where: { purchaseDate: { gte: start, lt: end } } }),
-    ]);
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const k = monthKey(d);
     monthlyData.push({
-      month: `${start.getMonth() + 1}月`,
-      beans: beanMonth._sum.price || 0,
-      cafe: cafeMonth._sum.price || 0,
+      month: `${d.getMonth() + 1}月`,
+      beans: beanByMonth.get(k) || 0,
+      cafe: cafeByMonth.get(k) || 0,
     });
   }
 

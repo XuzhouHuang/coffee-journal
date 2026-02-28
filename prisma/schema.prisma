@@ -18,11 +18,13 @@ model Region {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   beans     Bean[]
+
+  @@unique([country, region])
 }
 
 model Variety {
   id          Int      @id @default(autoincrement())
-  name        String
+  name        String   @unique
   description String?
   flavor      String?
   createdAt   DateTime @default(now())
@@ -32,7 +34,7 @@ model Variety {
 
 model Roaster {
   id        Int      @id @default(autoincrement())
-  name      String
+  name      String   @unique
   country   String
   specialty String?
   website   String?

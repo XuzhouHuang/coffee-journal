@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { RegionDialog } from "./region-dialog";
 
+export const dynamic = "force-dynamic";
 export default async function RegionsPage() {
   const regions = await prisma.region.findMany({ orderBy: { country: "asc" } });
 

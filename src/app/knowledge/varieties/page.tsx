@@ -2,6 +2,8 @@ import { prisma } from "@/lib/db";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { VarietyDialog } from "./variety-dialog";
 
+export const dynamic = "force-dynamic";
+
 export default async function VarietiesPage() {
   const varieties = await prisma.variety.findMany({ orderBy: { name: "asc" } });
 

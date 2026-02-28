@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -34,20 +35,14 @@ interface BeanDetailViewProps {
 }
 
 export function BeanDetailView({ initialBean }: BeanDetailViewProps) {
+  const router = useRouter();
   const [bean, setBean] = useState<BeanDetail>(initialBean);
   const [purchaseOpen, setPurchaseOpen] = useState(false);
   const [purchaseKey, setPurchaseKey] = useState(0);
 
-  const loadBean = async () => {
-    try {
-      const res = await fetch(`/api/beans/${bean.id}`);
-      if (!res.ok) throw new Error("Failed to load");
-      const data = await res.json();
-      setBean(data);
-    } catch {
-      toast.error("加载失败");
-    }
-  };
+  useEffect(() => {
+    setBean(initialBean);
+  }, [initialBean]);
 
   async function handlePurchase(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -66,7 +61,7 @@ export function BeanDetailView({ initialBean }: BeanDetailViewProps) {
       }
       setPurchaseOpen(false);
       setPurchaseKey((k) => k + 1);
-      loadBean();
+      router.refresh();
       toast.success("购买记录添加成功！");
     } catch {
       toast.error("网络错误，请重试");

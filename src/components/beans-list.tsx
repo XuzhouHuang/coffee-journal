@@ -184,6 +184,10 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
         </Select>
       </div>
 
+      {beans.length >= 20 && (search || (filterRegion && filterRegion !== "all") || (filterVariety && filterVariety !== "all")) && (
+        <p className="text-xs text-muted-foreground">仅在已加载的 {beans.length} 条数据中筛选</p>
+      )}
+
       {/* Bean list */}
       {filtered.length === 0 ? (
         <p className="text-muted-foreground py-8 text-center">暂无咖啡豆，点击上方按钮添加</p>
