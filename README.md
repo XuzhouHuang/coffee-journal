@@ -20,13 +20,13 @@
 | 语言 | TypeScript | 类型安全 |
 | UI | TailwindCSS + shadcn/ui | 快速出好看的界面，内置响应式 |
 | 图表 | Recharts | React 图表库，统计页面用 |
-| 认证 | NextAuth.js | 简单密码登录，保护个人数据 |
+| 认证 | 无（Web 公开访问）；数据库层面通过 Azure 网络安全组 + 连接字符串认证保护 |
 | 数据库 | Azure SQL (Serverless) 或 PostgreSQL Flexible Server | 云原生，按需计费 |
 | 存储 | Azure Blob Storage | 图片/照片存储 |
 | 部署 | Azure Container Apps | 按需缩放，闲时近零成本 |
 | CI/CD | GitHub Actions → Azure | 推代码自动部署 |
 
-> **📱 移动端适配：** 所有页面使用 TailwindCSS 响应式设计（mobile-first），手机上随时记录冲煮参数。
+> **📱 响应式设计：** 所有页面使用 TailwindCSS 响应式布局（mobile-first），手机和 iPad 上也能合理展示和操作。非原生 APP，纯 Web 浏览器访问。
 
 ---
 
@@ -181,15 +181,14 @@ coffee-journal/
 │   │   │   ├── brew-logs/    # 冲煮记录 CRUD
 │   │   │   ├── purchases/    # 购买记录 CRUD
 │   │   │   ├── cafe/         # 咖啡店消费 CRUD
-│   │   │   └── auth/         # 认证（NextAuth.js）
-│   │   └── login/            # 登录页
+│   │   │   └── upload/       # 图片上传
+│   │   └── login/            # 登录页（预留，暂不实现）
 │   ├── components/
 │   │   ├── ui/               # shadcn/ui 基础组件
 │   │   ├── charts/           # 图表组件
 │   │   └── forms/            # 表单组件
 │   ├── lib/
 │   │   ├── db.ts             # Prisma 客户端
-│   │   ├── auth.ts           # 认证配置
 │   │   └── utils.ts          # 工具函数
 │   └── types/                # TypeScript 类型
 ├── public/                   # 静态资源
@@ -208,7 +207,7 @@ coffee-journal/
 
 | 阶段 | 内容 | 预估时间 |
 |---|---|---|
-| Phase 1 | 项目初始化 + 数据模型 + Prisma schema + 认证 | 1天 |
+| Phase 1 | 项目初始化 + 数据模型 + Prisma schema | 1天 |
 | Phase 2 | 咖啡豆 CRUD + 购买记录 + 冲煮记录（核心高频功能） | 2-3天 |
 | Phase 3 | 咖啡店消费记录 + 消费统计 | 1-2天 |
 | Phase 4 | 知识库页面（产区/品种/烘焙商）+ 种子数据 | 2天 |
@@ -325,6 +324,12 @@ jobs:
           az containerapp update --name coffee-journal --resource-group $RG \
             --image $ACR_NAME.azurecr.io/coffee-journal:${{ github.sha }}
 ```
+
+### 数据库安全
+- Azure PostgreSQL 通过 **网络安全组（NSG）** 限制访问 IP
+- 仅允许 Container Apps 的出站 IP 连接数据库
+- 连接字符串使用 **SSL 强制加密**
+- 数据库密码通过 Azure Key Vault 或 GitHub Secrets 管理，不硬编码
 
 ### 环境变量
 ```env
