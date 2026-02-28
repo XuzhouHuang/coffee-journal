@@ -18,7 +18,7 @@ export default async function VarietiesPage() {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {varieties.map((v) => (
-            <Card key={v.id} className="glass-card border-0 hover:shadow-xl hover:shadow-purple-500/10 hover:scale-[1.02] transition-all">
+            <Card key={v.id} className="glass-card border-0 hover:shadow-xl hover:shadow-teal-500/10 hover:scale-[1.02] transition-all">
               <CardHeader className="pb-2">
                 <CardTitle className="text-base">{v.name}</CardTitle>
               </CardHeader>

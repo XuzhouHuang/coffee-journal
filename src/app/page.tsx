@@ -53,8 +53,8 @@ export default async function HomePage() {
     .slice(0, 5);
 
   const statCards = [
-    { emoji: "☕", label: "咖啡豆种类", value: `${beanCount} 款`, gradient: "from-purple-500/20 to-purple-600/20" },
-    { emoji: "📝", label: "冲煮记录", value: `${brewCount} 次`, gradient: "from-pink-500/20 to-pink-600/20" },
+    { emoji: "☕", label: "咖啡豆种类", value: `${beanCount} 款`, gradient: "from-teal-400/20 to-teal-500/20" },
+    { emoji: "📝", label: "冲煮记录", value: `${brewCount} 次`, gradient: "from-emerald-400/20 to-emerald-500/20" },
     { emoji: "💰", label: "本月消费", value: `¥${monthTotal.toFixed(0)}`, gradient: "from-orange-400/20 to-orange-500/20" },
     { emoji: "⭐", label: "最高评分", value: maxRating != null ? maxRating.toFixed(1) : "-", gradient: "from-amber-400/20 to-amber-500/20" },
   ];
@@ -63,7 +63,7 @@ export default async function HomePage() {
     <div className="space-y-6">
       {/* Welcome */}
       <div className="space-y-1">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-teal-500 to-emerald-400 bg-clip-text text-transparent">
           咖啡日志 ☕
         </h1>
         <p className="text-muted-foreground">记录每一杯的味道</p>

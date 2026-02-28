@@ -33,8 +33,8 @@ function NavLinks({ onClick }: { onClick?: () => void }) {
           className={cn(
             "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all",
             isActive
-              ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium shadow-md shadow-purple-500/20"
-              : "text-muted-foreground hover:bg-purple-50/60 hover:text-foreground dark:hover:bg-white/5"
+              ? "bg-gradient-to-r from-teal-400 to-emerald-400 text-white font-medium shadow-md shadow-teal-500/20"
+              : "text-muted-foreground hover:bg-teal-50/60 hover:text-foreground dark:hover:bg-white/5"
           )}
         >
           <item.icon className="h-4 w-4" />
@@ -55,7 +55,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <aside className="hidden md:flex w-60 flex-col bg-white/40 dark:bg-white/5 backdrop-blur-xl border-r border-white/20 p-4">
         <Link href="/" className="flex items-center gap-2 mb-6 px-3">
           <span className="text-2xl">☕</span>
-          <span className="text-lg font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">咖啡日志</span>
+          <span className="text-lg font-bold bg-gradient-to-r from-teal-500 to-emerald-400 bg-clip-text text-transparent">咖啡日志</span>
         </Link>
         <NavLinks />
       </aside>
@@ -66,7 +66,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <header className="md:hidden flex items-center justify-between bg-white/40 dark:bg-white/5 backdrop-blur-xl border-b border-white/20 p-4">
           <Link href="/" className="flex items-center gap-2">
             <span className="text-xl">☕</span>
-            <span className="font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">咖啡日志</span>
+            <span className="font-bold bg-gradient-to-r from-teal-500 to-emerald-400 bg-clip-text text-transparent">咖啡日志</span>
           </Link>
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
@@ -77,7 +77,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <SheetContent side="left" className="w-60 bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl border-white/20">
               <div className="flex items-center gap-2 mb-6 px-3 pt-4">
                 <span className="text-2xl">☕</span>
-                <span className="text-lg font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">咖啡日志</span>
+                <span className="text-lg font-bold bg-gradient-to-r from-teal-500 to-emerald-400 bg-clip-text text-transparent">咖啡日志</span>
               </div>
               <NavLinks onClick={() => setOpen(false)} />
             </SheetContent>

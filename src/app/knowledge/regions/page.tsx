@@ -18,7 +18,7 @@ export default async function RegionsPage() {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {regions.map((r) => (
-            <Card key={r.id} className="glass-card border-0 hover:shadow-xl hover:shadow-purple-500/10 hover:scale-[1.02] transition-all">
+            <Card key={r.id} className="glass-card border-0 hover:shadow-xl hover:shadow-teal-500/10 hover:scale-[1.02] transition-all">
               <CardHeader className="pb-2">
                 <CardTitle className="text-base">{r.country} · {r.region}</CardTitle>
               </CardHeader>
@@ -26,7 +26,7 @@ export default async function RegionsPage() {
                 {r.subRegion && <p>子产区: {r.subRegion}</p>}
                 <div className="flex flex-wrap gap-1">
                   {r.altitude && <Badge variant="outline" className="rounded-full">海拔 {r.altitude}</Badge>}
-                  {r.climate && <Badge variant="secondary" className="rounded-full bg-purple-100/60 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">{r.climate}</Badge>}
+                  {r.climate && <Badge variant="secondary" className="rounded-full bg-teal-100/60 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300">{r.climate}</Badge>}
                 </div>
                 {r.notes && <p className="text-muted-foreground">{r.notes}</p>}
               </CardContent>

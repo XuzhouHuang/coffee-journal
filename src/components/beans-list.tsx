@@ -195,15 +195,15 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((bean) => (
             <Link key={bean.id} href={`/beans/${bean.id}`}>
-              <Card className="glass-card border-0 hover:shadow-xl hover:shadow-purple-500/10 hover:scale-[1.02] transition-all cursor-pointer h-full">
+              <Card className="glass-card border-0 hover:shadow-xl hover:shadow-teal-500/10 hover:scale-[1.02] transition-all cursor-pointer h-full">
                 <CardHeader>
                   <CardTitle className="text-base">{bean.name}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <div className="flex flex-wrap gap-1">
-                    {bean.region && <Badge variant="secondary" className="rounded-full bg-purple-100/60 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">{bean.region.country}</Badge>}
+                    {bean.region && <Badge variant="secondary" className="rounded-full bg-teal-100/60 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300">{bean.region.country}</Badge>}
                     {bean.variety && <Badge variant="outline" className="rounded-full">{bean.variety.name}</Badge>}
-                    {bean.roastLevel && <Badge className="rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0">{bean.roastLevel}</Badge>}
+                    {bean.roastLevel && <Badge className="rounded-full bg-gradient-to-r from-teal-400 to-emerald-400 text-white border-0">{bean.roastLevel}</Badge>}
                     {bean.process && <Badge variant="outline" className="rounded-full">{bean.process}</Badge>}
                   </div>
                   {bean.roaster && (
@@ -213,7 +213,7 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
                     <p className="text-sm text-muted-foreground">{bean.flavorNotes}</p>
                   )}
                   {bean.score != null && (
-                    <p className="text-sm font-semibold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">评分: {bean.score}</p>
+                    <p className="text-sm font-semibold bg-gradient-to-r from-teal-500 to-emerald-400 bg-clip-text text-transparent">评分: {bean.score}</p>
                   )}
                 </CardContent>
               </Card>
