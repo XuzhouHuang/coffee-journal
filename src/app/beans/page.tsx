@@ -1,227 +1,31 @@
-"use client";
+import { prisma } from "@/lib/db";
+import { BeansList } from "@/components/beans-list";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Plus } from "lucide-react";
-import { toast } from "sonner";
+export default async function BeansPage() {
+  const [beansRaw, meta] = await Promise.all([
+    prisma.bean.findMany({
+      include: { roaster: true, region: true, variety: true },
+      orderBy: { createdAt: "desc" },
+      take: 20,
+    }),
+    Promise.all([
+      prisma.region.findMany({ orderBy: { country: "asc" } }),
+      prisma.variety.findMany({ orderBy: { name: "asc" } }),
+      prisma.roaster.findMany({ orderBy: { name: "asc" } }),
+    ]).then(([regions, varieties, roasters]) => ({ regions, varieties, roasters })),
+  ]);
 
-interface Bean {
-  id: number;
-  name: string;
-  process?: string;
-  roastLevel?: string;
-  flavorNotes?: string;
-  score?: number;
-  roaster?: { id: number; name: string };
-  region?: { id: number; country: string; region: string };
-  variety?: { id: number; name: string };
-}
+  const beans = beansRaw.map((b) => ({
+    id: b.id,
+    name: b.name,
+    process: b.process,
+    roastLevel: b.roastLevel,
+    flavorNotes: b.flavorNotes,
+    score: b.score,
+    roaster: b.roaster ? { id: b.roaster.id, name: b.roaster.name } : null,
+    region: b.region ? { id: b.region.id, country: b.region.country, region: b.region.region } : null,
+    variety: b.variety ? { id: b.variety.id, name: b.variety.name } : null,
+  }));
 
-interface Meta {
-  regions: { id: number; country: string; region: string }[];
-  varieties: { id: number; name: string }[];
-  roasters: { id: number; name: string }[];
-}
-
-export default function BeansPage() {
-  const [beans, setBeans] = useState<Bean[]>([]);
-  const [meta, setMeta] = useState<Meta>({ regions: [], varieties: [], roasters: [] });
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [filterRegion, setFilterRegion] = useState("");
-  const [filterVariety, setFilterVariety] = useState("");
-  const [search, setSearch] = useState("");
-
-  useEffect(() => {
-    fetch("/api/beans").then((r) => r.json()).then(setBeans);
-    fetch("/api/meta").then((r) => r.json()).then(setMeta);
-  }, []);
-
-  const filtered = beans.filter((b) => {
-    if (search && !b.name.toLowerCase().includes(search.toLowerCase())) return false;
-    if (filterRegion && filterRegion !== "all" && b.region?.id !== parseInt(filterRegion)) return false;
-    if (filterVariety && filterVariety !== "all" && b.variety?.id !== parseInt(filterVariety)) return false;
-    return true;
-  });
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const form = new FormData(e.currentTarget);
-    const data = Object.fromEntries(form.entries());
-    const res = await fetch("/api/beans", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...data,
-        regionId: data.regionId ? parseInt(data.regionId as string) : null,
-        varietyId: data.varietyId ? parseInt(data.varietyId as string) : null,
-        roasterId: data.roasterId ? parseInt(data.roasterId as string) : null,
-      }),
-    });
-    if (res.ok) {
-      const bean = await res.json();
-      setBeans((prev) => [bean, ...prev]);
-      setDialogOpen(false);
-      toast.success("咖啡豆添加成功！");
-    }
-  }
-
-  return (
-    <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold">咖啡豆</h1>
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
-            <Button><Plus className="h-4 w-4 mr-2" />添加咖啡豆</Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>添加咖啡豆</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <Label>豆名 *</Label>
-                <Input name="name" required />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>产区</Label>
-                  <Select name="regionId">
-                    <SelectTrigger><SelectValue placeholder="选择产区" /></SelectTrigger>
-                    <SelectContent>
-                      {meta.regions.map((r) => (
-                        <SelectItem key={r.id} value={r.id.toString()}>{r.country} - {r.region}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label>品种</Label>
-                  <Select name="varietyId">
-                    <SelectTrigger><SelectValue placeholder="选择品种" /></SelectTrigger>
-                    <SelectContent>
-                      {meta.varieties.map((v) => (
-                        <SelectItem key={v.id} value={v.id.toString()}>{v.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <div>
-                <Label>烘焙商</Label>
-                <Select name="roasterId">
-                  <SelectTrigger><SelectValue placeholder="选择烘焙商" /></SelectTrigger>
-                  <SelectContent>
-                    {meta.roasters.map((r) => (
-                      <SelectItem key={r.id} value={r.id.toString()}>{r.name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>处理法</Label>
-                  <Input name="process" placeholder="水洗/日晒/蜜处理..." />
-                </div>
-                <div>
-                  <Label>烘焙度</Label>
-                  <Input name="roastLevel" placeholder="浅/中/深" />
-                </div>
-              </div>
-              <div>
-                <Label>风味描述</Label>
-                <Textarea name="flavorNotes" placeholder="花香、柑橘、巧克力..." />
-              </div>
-              <div>
-                <Label>评分</Label>
-                <Input name="score" type="number" step="0.1" min="0" max="100" />
-              </div>
-              <Button type="submit" className="w-full">保存</Button>
-            </form>
-          </DialogContent>
-        </Dialog>
-      </div>
-
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-2">
-        <Input
-          placeholder="搜索豆名..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="sm:max-w-xs"
-        />
-        <Select value={filterRegion} onValueChange={setFilterRegion}>
-          <SelectTrigger className="sm:max-w-[180px]"><SelectValue placeholder="筛选产区" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">全部产区</SelectItem>
-            {meta.regions.map((r) => (
-              <SelectItem key={r.id} value={r.id.toString()}>{r.country}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Select value={filterVariety} onValueChange={setFilterVariety}>
-          <SelectTrigger className="sm:max-w-[180px]"><SelectValue placeholder="筛选品种" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">全部品种</SelectItem>
-            {meta.varieties.map((v) => (
-              <SelectItem key={v.id} value={v.id.toString()}>{v.name}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Bean list */}
-      {filtered.length === 0 ? (
-        <p className="text-muted-foreground py-8 text-center">暂无咖啡豆，点击上方按钮添加</p>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((bean) => (
-            <Link key={bean.id} href={`/beans/${bean.id}`}>
-              <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
-                <CardHeader>
-                  <CardTitle className="text-base">{bean.name}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="flex flex-wrap gap-1">
-                    {bean.region && <Badge variant="secondary">{bean.region.country}</Badge>}
-                    {bean.variety && <Badge variant="outline">{bean.variety.name}</Badge>}
-                    {bean.roastLevel && <Badge>{bean.roastLevel}</Badge>}
-                    {bean.process && <Badge variant="outline">{bean.process}</Badge>}
-                  </div>
-                  {bean.roaster && (
-                    <p className="text-sm text-muted-foreground">烘焙商: {bean.roaster.name}</p>
-                  )}
-                  {bean.flavorNotes && (
-                    <p className="text-sm text-muted-foreground">{bean.flavorNotes}</p>
-                  )}
-                  {bean.score && (
-                    <p className="text-sm font-medium">评分: {bean.score}</p>
-                  )}
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
-      )}
-    </div>
-  );
+  return <BeansList initialBeans={beans} meta={meta} />;
 }

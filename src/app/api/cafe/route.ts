@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
+import { createCafePurchaseSchema } from "@/lib/validations";
+import { safeParseFloat } from "@/lib/utils";
 
 export async function GET() {
   try {
@@ -16,17 +18,22 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+    const result = createCafePurchaseSchema.safeParse(body);
+    if (!result.success) {
+      return NextResponse.json({ error: result.error.issues.map((i) => i.message).join(", ") }, { status: 400 });
+    }
+    const d = result.data;
     const purchase = await prisma.cafePurchase.create({
       data: {
-        cafeName: body.cafeName,
-        location: body.location || null,
-        drinkName: body.drinkName,
-        drinkType: body.drinkType || null,
-        price: parseFloat(body.price),
-        purchaseDate: new Date(body.purchaseDate),
-        rating: body.rating ? parseFloat(body.rating) : null,
-        notes: body.notes || null,
-        photo: body.photo || null,
+        cafeName: d.cafeName,
+        location: d.location ?? null,
+        drinkName: d.drinkName,
+        drinkType: d.drinkType ?? null,
+        price: d.price,
+        purchaseDate: new Date(d.purchaseDate),
+        rating: safeParseFloat(d.rating),
+        notes: d.notes ?? null,
+        photo: d.photo ?? null,
       },
     });
     return NextResponse.json(purchase, { status: 201 });

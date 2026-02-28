@@ -1,18 +1,27 @@
 import { prisma } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
+import { createBeanPurchaseSchema } from "@/lib/validations";
+import { safeParseInt } from "@/lib/utils";
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
+    const beanId = safeParseInt(id);
+    if (beanId === null) return NextResponse.json({ error: "Invalid id" }, { status: 400 });
     const body = await req.json();
+    const result = createBeanPurchaseSchema.safeParse(body);
+    if (!result.success) {
+      return NextResponse.json({ error: result.error.issues.map((i) => i.message).join(", ") }, { status: 400 });
+    }
+    const d = result.data;
     const purchase = await prisma.beanPurchase.create({
       data: {
-        beanId: parseInt(id),
-        price: parseFloat(body.price),
-        weight: parseInt(body.weight),
-        purchaseDate: new Date(body.purchaseDate),
-        source: body.source || null,
-        notes: body.notes || null,
+        beanId,
+        price: d.price,
+        weight: d.weight,
+        purchaseDate: new Date(d.purchaseDate),
+        source: d.source ?? null,
+        notes: d.notes ?? null,
       },
     });
     return NextResponse.json(purchase, { status: 201 });

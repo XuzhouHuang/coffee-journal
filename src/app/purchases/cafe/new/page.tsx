@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
+import { todayLocal } from "@/lib/utils";
 
 export default function NewCafePurchasePage() {
   const router = useRouter();
@@ -17,14 +18,21 @@ export default function NewCafePurchasePage() {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
     const data = Object.fromEntries(form.entries());
-    const res = await fetch("/api/cafe", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    if (res.ok) {
+    try {
+      const res = await fetch("/api/cafe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: "请求失败" }));
+        toast.error(err.error || "添加失败");
+        return;
+      }
       toast.success("咖啡店消费记录添加成功！");
       router.push("/purchases");
+    } catch {
+      toast.error("网络错误，请重试");
     }
   }
 
@@ -64,7 +72,7 @@ export default function NewCafePurchasePage() {
             </div>
             <div>
               <Label>日期 *</Label>
-              <Input name="purchaseDate" type="date" required defaultValue={new Date().toISOString().split("T")[0]} />
+              <Input name="purchaseDate" type="date" required defaultValue={todayLocal()} />
             </div>
             <div>
               <Label>评分 (1-5)</Label>

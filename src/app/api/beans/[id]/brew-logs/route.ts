@@ -1,23 +1,32 @@
 import { prisma } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
+import { createBrewLogSchema } from "@/lib/validations";
+import { safeParseInt, safeParseFloat } from "@/lib/utils";
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
+    const beanId = safeParseInt(id);
+    if (beanId === null) return NextResponse.json({ error: "Invalid id" }, { status: 400 });
     const body = await req.json();
+    const result = createBrewLogSchema.safeParse(body);
+    if (!result.success) {
+      return NextResponse.json({ error: result.error.issues.map((i) => i.message).join(", ") }, { status: 400 });
+    }
+    const d = result.data;
     const brewLog = await prisma.brewLog.create({
       data: {
-        beanId: parseInt(id),
-        brewMethod: body.brewMethod,
-        dose: body.dose ? parseFloat(body.dose) : null,
-        waterAmount: body.waterAmount ? parseFloat(body.waterAmount) : null,
-        ratio: body.ratio || null,
-        grindSize: body.grindSize || null,
-        waterTemp: body.waterTemp ? parseInt(body.waterTemp) : null,
-        brewTime: body.brewTime || null,
-        rating: body.rating ? parseFloat(body.rating) : null,
-        notes: body.notes || null,
-        brewDate: new Date(body.brewDate),
+        beanId,
+        brewMethod: d.brewMethod,
+        dose: safeParseFloat(d.dose),
+        waterAmount: safeParseFloat(d.waterAmount),
+        ratio: d.ratio ?? null,
+        grindSize: d.grindSize ?? null,
+        waterTemp: safeParseInt(typeof d.waterTemp === 'number' ? String(d.waterTemp) : d.waterTemp),
+        brewTime: d.brewTime ?? null,
+        rating: safeParseFloat(d.rating),
+        notes: d.notes ?? null,
+        brewDate: new Date(d.brewDate),
       },
     });
     return NextResponse.json(brewLog, { status: 201 });

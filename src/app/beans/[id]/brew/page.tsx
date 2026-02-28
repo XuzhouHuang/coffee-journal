@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
+import { todayLocal } from "@/lib/utils";
 
 const brewMethods = ["手冲", "摩卡壶", "法压壶", "爱乐压", "意式浓缩", "冷萃", "虹吸壶", "土耳其壶", "其他"];
 
@@ -36,14 +37,21 @@ export default function BrewLogPage() {
       return;
     }
 
-    const res = await fetch(`/api/beans/${id}/brew-logs`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    if (res.ok) {
+    try {
+      const res = await fetch(`/api/beans/${id}/brew-logs`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: "请求失败" }));
+        toast.error(err.error || "添加失败");
+        return;
+      }
       toast.success("冲煮记录添加成功！");
       router.push(`/beans/${id}`);
+    } catch {
+      toast.error("网络错误，请重试");
     }
   }
 
@@ -72,7 +80,7 @@ export default function BrewLogPage() {
             </div>
             <div>
               <Label>冲煮日期 *</Label>
-              <Input name="brewDate" type="date" required defaultValue={new Date().toISOString().split("T")[0]} />
+              <Input name="brewDate" type="date" required defaultValue={todayLocal()} />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div><Label>粉量 (g)</Label><Input name="dose" type="number" step="0.1" /></div>
