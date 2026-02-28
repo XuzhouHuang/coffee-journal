@@ -14,26 +14,93 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Plus } from "lucide-react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 import type { BeanPurchase, CafePurchase } from "@/types";
+
+interface PurchaseStats {
+  monthBeans: number;
+  monthCafe: number;
+  monthTotal: number;
+  monthCount: number;
+  monthlyData: { month: string; beans: number; cafe: number }[];
+}
 
 interface PurchasesListProps {
   initialBeanPurchases: BeanPurchase[];
   initialCafePurchases: CafePurchase[];
+  stats: PurchaseStats;
 }
 
-export function PurchasesList({ initialBeanPurchases, initialCafePurchases }: PurchasesListProps) {
+export function PurchasesList({ initialBeanPurchases, initialCafePurchases, stats }: PurchasesListProps) {
   const [tab, setTab] = useState<"beans" | "cafe">("beans");
   const beanPurchases = initialBeanPurchases;
   const cafePurchases = initialCafePurchases;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <h1 className="text-2xl font-bold">消费记录</h1>
         <Link href="/purchases/cafe/new">
           <Button><Plus className="h-4 w-4 mr-2" />添加咖啡店消费</Button>
         </Link>
       </div>
+
+      {/* Stats cards */}
+      <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardContent className="pt-4 pb-3">
+            <p className="text-sm text-muted-foreground">本月豆子消费</p>
+            <p className="text-2xl font-bold">¥{stats.monthBeans.toFixed(0)}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4 pb-3">
+            <p className="text-sm text-muted-foreground">本月咖啡店消费</p>
+            <p className="text-2xl font-bold">¥{stats.monthCafe.toFixed(0)}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4 pb-3">
+            <p className="text-sm text-muted-foreground">本月总消费</p>
+            <p className="text-2xl font-bold">¥{stats.monthTotal.toFixed(0)}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4 pb-3">
+            <p className="text-sm text-muted-foreground">本月消费次数</p>
+            <p className="text-2xl font-bold">{stats.monthCount} 次</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Monthly chart */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">近6个月消费趋势</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={stats.monthlyData}>
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip formatter={(value) => `¥${value}`} />
+                <Legend />
+                <Bar dataKey="beans" name="豆子" fill="#3b82f6" />
+                <Bar dataKey="cafe" name="咖啡店" fill="#f97316" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="flex gap-2">
         <Button

@@ -42,6 +42,30 @@ export const createBrewLogSchema = z.object({
   brewDate: z.string().min(1, "冲煮日期不能为空"),
 });
 
+export const createRegionSchema = z.object({
+  country: z.string().min(1, "国家不能为空"),
+  region: z.string().min(1, "产区不能为空"),
+  subRegion: z.string().nullable().optional(),
+  altitude: z.string().nullable().optional(),
+  climate: z.string().nullable().optional(),
+  notes: z.string().nullable().optional(),
+});
+
+export const createVarietySchema = z.object({
+  name: z.string().min(1, "品种名不能为空"),
+  description: z.string().nullable().optional(),
+  flavor: z.string().nullable().optional(),
+});
+
+export const createRoasterSchema = z.object({
+  name: z.string().min(1, "烘焙商名不能为空"),
+  country: z.string().min(1, "国家不能为空"),
+  specialty: z.string().nullable().optional(),
+  website: z.string().nullable().optional(),
+  shopUrl: z.string().nullable().optional(),
+  notes: z.string().nullable().optional(),
+});
+
 export const createCafePurchaseSchema = z.object({
   cafeName: z.string().min(1, "店名不能为空"),
   location: z.string().nullable().optional(),
