@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Coffee, Menu, ShoppingBag, Home, MapPin, Leaf, Flame } from "lucide-react";
+import { Coffee, Menu, ShoppingBag, Home, MapPin, Leaf, Flame, Beaker } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -15,6 +15,7 @@ const navItems = [
   { href: "/knowledge/regions", label: "产区", icon: MapPin },
   { href: "/knowledge/varieties", label: "品种", icon: Leaf },
   { href: "/knowledge/roasters", label: "烘焙商", icon: Flame },
+  { href: "/knowledge/processing", label: "处理法", icon: Beaker },
 ];
 
 function NavLinks({ onClick }: { onClick?: () => void }) {

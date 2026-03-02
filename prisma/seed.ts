@@ -39,6 +39,47 @@ async function main() {
     ],
   });
 
+  // Update regions with notes from article
+  await prisma.region.update({ where: { country_region: { country: "哥伦比亚", region: "慧兰" } }, data: { notes: "厌氧技术发源地，风格最狂野奔放，热带水果和酒香极具冲击力" } });
+  await prisma.region.update({ where: { country_region: { country: "哥斯达黎加", region: "塔拉珠" } }, data: { notes: "主打精准可控，强调咖啡本身的干净度和甜感，平衡优雅" } });
+  await prisma.region.update({ where: { country_region: { country: "巴拿马", region: "波奎特" } }, data: { notes: "极致精致路线，常与瑰夏绑定，花香四溢，干净到发指" } });
+
+  // Processing methods
+  await prisma.processingMethod.createMany({
+    data: [
+      {
+        name: "厌氧水洗",
+        description: "将咖啡樱桃放入完全密封、无氧的罐中发酵，之后去除果肉用水洗方式处理。在缺氧环境下，微生物改变代谢方式，产生大量酯类和乳酸，是咖啡风味的\u201C超级放大镜\u201D。",
+        flavorNotes: "花香、柑橘、茶感明显，果香存在但不突兀。口感像一杯加了高光的高级清茶，干净度极高。",
+        suitable: "想要轻松喝一杯、看重耐喝度、当作日常口粮",
+      },
+      {
+        name: "厌氧日晒",
+        description: "将咖啡樱桃放入密封无氧罐中发酵后，保留果肉进行日晒干燥。发酵产生的酯类与果肉中的糖分结合，风味更加浓郁奔放。",
+        flavorNotes: "草莓、葡萄、百香果、酒香，香气直接冲天灵盖！甜感极高，风味冲击力极强，像浓郁的果汁或果酒。",
+        suitable: "周末想要寻找刺激、喜欢明确水果味、追求记忆点",
+      },
+      {
+        name: "水洗",
+        description: "传统处理法。咖啡樱桃去除果皮果肉后，在水中发酵去除果胶层，再清洗干燥。强调咖啡豆本身的地域风味特征。",
+        flavorNotes: "干净明亮的酸质，花香、柑橘类水果酸，口感清爽通透。",
+        suitable: "喜欢干净风味、想品尝产区特色的咖啡爱好者",
+      },
+      {
+        name: "日晒",
+        description: "最古老的处理法。整颗咖啡樱桃直接铺在日晒床上干燥，果肉中的糖分在干燥过程中渗入咖啡豆，带来浓郁甜感。",
+        flavorNotes: "浓郁的莓果、热带水果风味，醇厚度高，甜感突出，带有果酱般的口感。",
+        suitable: "喜欢浓郁甜美风味、偏好醇厚口感",
+      },
+      {
+        name: "蜜处理",
+        description: "介于水洗和日晒之间。去除果皮但保留不同程度的果胶层进行干燥。根据保留果胶量分为白蜜、黄蜜、红蜜、黑蜜。",
+        flavorNotes: "甜感与干净度的平衡，焦糖、红糖甜感，中等醇厚度，兼具水洗的干净和日晒的甜美。",
+        suitable: "想要甜感但又不想太狂野、追求平衡口感",
+      },
+    ],
+  });
+
   console.log("Seed data created successfully!");
 }
 

@@ -67,6 +67,13 @@ export const createRoasterSchema = z.object({
   notes: z.string().nullable().optional(),
 });
 
+export const createProcessingMethodSchema = z.object({
+  name: z.string().min(1, "处理法名称不能为空"),
+  description: z.string().nullable().optional(),
+  flavorNotes: z.string().nullable().optional(),
+  suitable: z.string().nullable().optional(),
+});
+
 export const createCafePurchaseSchema = z.object({
   cafeName: z.string().min(1, "店名不能为空"),
   location: z.string().nullable().optional(),
