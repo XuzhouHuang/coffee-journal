@@ -5,13 +5,16 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Coffee, Menu, ShoppingBag, Home, MapPin, Leaf, Flame, Beaker } from "lucide-react";
+import { Coffee, Menu, ShoppingBag, Home, MapPin, Leaf, Flame, Beaker, BookOpen, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const navItems = [
+const mainNavItems = [
   { href: "/", label: "首页", icon: Home },
   { href: "/beans", label: "咖啡豆", icon: Coffee },
   { href: "/purchases", label: "消费记录", icon: ShoppingBag },
+];
+
+const knowledgeItems = [
   { href: "/knowledge/regions", label: "产区", icon: MapPin },
   { href: "/knowledge/varieties", label: "品种", icon: Leaf },
   { href: "/knowledge/roasters", label: "烘焙商", icon: Flame },
@@ -20,29 +23,55 @@ const navItems = [
 
 function NavLinks({ onClick }: { onClick?: () => void }) {
   const pathname = usePathname();
+  const [knowledgeOpen, setKnowledgeOpen] = useState(true);
+  const isKnowledgeActive = pathname.startsWith("/knowledge");
+
+  const renderLink = (item: { href: string; label: string; icon: React.ComponentType<{ className?: string }> }, indent = false) => {
+    const isActive = item.href === "/"
+      ? pathname === "/"
+      : pathname.startsWith(item.href);
+    return (
+      <Link
+        key={item.href}
+        href={item.href}
+        onClick={onClick}
+        className={cn(
+          "flex items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-bold transition-all",
+          indent && "ml-3 text-[14px]",
+          isActive
+            ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-md shadow-blue-500/30"
+            : "text-slate-400 hover:bg-white/[0.05] hover:text-white"
+        )}
+      >
+        <item.icon className={cn("h-5 w-5", indent && "h-4 w-4")} />
+        {item.label}
+      </Link>
+    );
+  };
+
   return (
     <nav className="flex flex-col gap-1.5">
-      {navItems.map((item) => {
-        const isActive = item.href === "/"
-          ? pathname === "/"
-          : pathname.startsWith(item.href);
-        return (
-        <Link
-          key={item.href}
-          href={item.href}
-          onClick={onClick}
+      {mainNavItems.map((item) => renderLink(item))}
+
+      {/* Knowledge Base Group */}
+      <div className="mt-3">
+        <button
+          onClick={() => setKnowledgeOpen(!knowledgeOpen)}
           className={cn(
-            "flex items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-bold transition-all",
-            isActive
-              ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-md shadow-blue-500/30"
-              : "text-slate-400 hover:bg-white/[0.05] hover:text-white"
+            "flex items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-bold transition-all w-full",
+            isKnowledgeActive ? "text-blue-400" : "text-slate-400 hover:text-white"
           )}
         >
-          <item.icon className="h-5 w-5" />
-          {item.label}
-        </Link>
-        );
-      })}
+          <BookOpen className="h-5 w-5" />
+          <span className="flex-1 text-left">知识库</span>
+          <ChevronDown className={cn("h-4 w-4 transition-transform", knowledgeOpen && "rotate-180")} />
+        </button>
+        {knowledgeOpen && (
+          <div className="flex flex-col gap-1 mt-1">
+            {knowledgeItems.map((item) => renderLink(item, true))}
+          </div>
+        )}
+      </div>
     </nav>
   );
 }
