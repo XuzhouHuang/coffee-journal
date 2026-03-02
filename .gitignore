@@ -45,3 +45,7 @@ node_modules/
 .next/
 dev.db
 prisma/dev.db
+
+# Screenshots
+*.png
+*.jpg
