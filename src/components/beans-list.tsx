@@ -24,6 +24,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
+import { useIsAdmin } from "@/hooks/use-is-admin";
 import type { Bean, Meta } from "@/types";
 
 interface BeansListProps {
@@ -32,6 +33,7 @@ interface BeansListProps {
 }
 
 export function BeansList({ initialBeans, meta }: BeansListProps) {
+  const isAdmin = useIsAdmin();
   const [beans, setBeans] = useState<Bean[]>(initialBeans);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogKey, setDialogKey] = useState(0);
@@ -84,10 +86,10 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
     <div className="space-y-6 max-w-5xl mx-auto">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#6B5D50] mb-1">Bean Collection</p>
-          <h1 className="text-2xl font-bold text-[#F0EDE8] tracking-tight">咖啡豆</h1>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#B8B0A8] mb-1">Bean Collection</p>
+          <h1 className="text-2xl font-bold text-[#2C2825] tracking-tight">咖啡豆</h1>
         </div>
-        <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
+        {isAdmin && <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
           <DialogTrigger asChild>
             <Button className="gradient-btn"><Plus className="h-4 w-4 mr-2" strokeWidth={1.5} />添加咖啡豆</Button>
           </DialogTrigger>
@@ -98,13 +100,13 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
             <form key={dialogKey} onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <Label>豆名 *</Label>
-                <Input name="name" required className="rounded-lg bg-[rgba(255,255,255,0.04)]" />
+                <Input name="name" required className="rounded-lg bg-[#F5F0EB]" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label>产区</Label>
                   <Select name="regionId">
-                    <SelectTrigger className="rounded-lg bg-[rgba(255,255,255,0.04)]"><SelectValue placeholder="选择产区" /></SelectTrigger>
+                    <SelectTrigger className="rounded-lg bg-[#F5F0EB]"><SelectValue placeholder="选择产区" /></SelectTrigger>
                     <SelectContent>
                       {meta.regions.map((r) => (
                         <SelectItem key={r.id} value={r.id.toString()}>{r.country} - {r.region}</SelectItem>
@@ -115,7 +117,7 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
                 <div>
                   <Label>品种</Label>
                   <Select name="varietyId">
-                    <SelectTrigger className="rounded-lg bg-[rgba(255,255,255,0.04)]"><SelectValue placeholder="选择品种" /></SelectTrigger>
+                    <SelectTrigger className="rounded-lg bg-[#F5F0EB]"><SelectValue placeholder="选择品种" /></SelectTrigger>
                     <SelectContent>
                       {meta.varieties.map((v) => (
                         <SelectItem key={v.id} value={v.id.toString()}>{v.name}</SelectItem>
@@ -127,7 +129,7 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
               <div>
                 <Label>烘焙商</Label>
                 <Select name="roasterId">
-                  <SelectTrigger className="rounded-lg bg-[rgba(255,255,255,0.04)]"><SelectValue placeholder="选择烘焙商" /></SelectTrigger>
+                  <SelectTrigger className="rounded-lg bg-[#F5F0EB]"><SelectValue placeholder="选择烘焙商" /></SelectTrigger>
                   <SelectContent>
                     {meta.roasters.map((r) => (
                       <SelectItem key={r.id} value={r.id.toString()}>{r.name}</SelectItem>
@@ -138,25 +140,25 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label>处理法</Label>
-                  <Input name="process" placeholder="水洗/日晒/蜜处理..." className="rounded-lg bg-[rgba(255,255,255,0.04)]" />
+                  <Input name="process" placeholder="水洗/日晒/蜜处理..." className="rounded-lg bg-[#F5F0EB]" />
                 </div>
                 <div>
                   <Label>烘焙度</Label>
-                  <Input name="roastLevel" placeholder="浅/中/深" className="rounded-lg bg-[rgba(255,255,255,0.04)]" />
+                  <Input name="roastLevel" placeholder="浅/中/深" className="rounded-lg bg-[#F5F0EB]" />
                 </div>
               </div>
               <div>
                 <Label>风味描述</Label>
-                <Textarea name="flavorNotes" placeholder="花香、柑橘、巧克力..." className="rounded-lg bg-[rgba(255,255,255,0.04)]" />
+                <Textarea name="flavorNotes" placeholder="花香、柑橘、巧克力..." className="rounded-lg bg-[#F5F0EB]" />
               </div>
               <div>
                 <Label>评分</Label>
-                <Input name="score" type="number" step="0.1" min="0" max="5" className="rounded-lg bg-[rgba(255,255,255,0.04)]" />
+                <Input name="score" type="number" step="0.1" min="0" max="5" className="rounded-lg bg-[#F5F0EB]" />
               </div>
               <Button type="submit" className="w-full gradient-btn">保存</Button>
             </form>
           </DialogContent>
-        </Dialog>
+        </Dialog>}
       </div>
 
       {/* Filters */}
@@ -165,10 +167,10 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
           placeholder="搜索豆名..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="sm:max-w-xs rounded-lg bg-[rgba(255,255,255,0.04)]"
+          className="sm:max-w-xs rounded-lg bg-[#F5F0EB]"
         />
         <Select value={filterRegion} onValueChange={setFilterRegion}>
-          <SelectTrigger className="sm:max-w-[180px] rounded-lg bg-[rgba(255,255,255,0.04)]"><SelectValue placeholder="筛选产区" /></SelectTrigger>
+          <SelectTrigger className="sm:max-w-[180px] rounded-lg bg-[#F5F0EB]"><SelectValue placeholder="筛选产区" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">全部产区</SelectItem>
             {meta.regions.map((r) => (
@@ -177,7 +179,7 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
           </SelectContent>
         </Select>
         <Select value={filterVariety} onValueChange={setFilterVariety}>
-          <SelectTrigger className="sm:max-w-[180px] rounded-lg bg-[rgba(255,255,255,0.04)]"><SelectValue placeholder="筛选品种" /></SelectTrigger>
+          <SelectTrigger className="sm:max-w-[180px] rounded-lg bg-[#F5F0EB]"><SelectValue placeholder="筛选品种" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">全部品种</SelectItem>
             {meta.varieties.map((v) => (
@@ -188,32 +190,32 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
       </div>
 
       {beans.length >= 20 && (search || (filterRegion && filterRegion !== "all") || (filterVariety && filterVariety !== "all")) && (
-        <p className="text-xs text-[#6B5D50]">仅在已加载的 {beans.length} 条数据中筛选</p>
+        <p className="text-xs text-[#B8B0A8]">仅在已加载的 {beans.length} 条数据中筛选</p>
       )}
 
       {/* Bean list */}
       {filtered.length === 0 ? (
-        <p className="text-[#6B5D50] py-12 text-center text-sm">暂无咖啡豆，点击上方按钮添加</p>
+        <p className="text-[#B8B0A8] py-12 text-center text-sm">暂无咖啡豆，点击上方按钮添加</p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((bean) => (
             <Link key={bean.id} href={`/beans/${bean.id}`}>
               <Card className="glass-card-interactive border-0 h-full">
                 <CardHeader className="pb-2 px-5 pt-5">
-                  <CardTitle className="text-base text-[#F0EDE8]">{bean.name}</CardTitle>
+                  <CardTitle className="text-base text-[#2C2825]">{bean.name}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3 px-5 pb-5">
                   <div className="flex flex-wrap gap-1.5">
-                    {bean.region && <Badge variant="secondary" className="rounded-md bg-[rgba(200,168,130,0.1)] text-[#C8A882] border-0 text-[11px] font-medium">{bean.region.country}</Badge>}
-                    {bean.variety && <Badge variant="outline" className="rounded-md text-[11px] border-[rgba(255,255,255,0.08)] text-[#8A7B6E]">{bean.variety.name}</Badge>}
-                    {bean.roastLevel && <Badge className="rounded-md bg-[rgba(200,168,130,0.15)] text-[#D4B896] border-0 text-[11px] font-medium">{bean.roastLevel}</Badge>}
-                    {bean.process && <Badge variant="outline" className="rounded-md text-[11px] border-[rgba(255,255,255,0.08)] text-[#8A7B6E]">{bean.process}</Badge>}
+                    {bean.region && <Badge variant="secondary" className="rounded-md bg-[#F0ECE6] text-[#8B7355] border-0 text-[11px] font-medium">{bean.region.country}</Badge>}
+                    {bean.variety && <Badge variant="outline" className="rounded-md text-[11px] border-[#E8E2DA] text-[#9C9490]">{bean.variety.name}</Badge>}
+                    {bean.roastLevel && <Badge className="rounded-md bg-[#EBE5DD] text-[#8B7355] border-0 text-[11px] font-medium">{bean.roastLevel}</Badge>}
+                    {bean.process && <Badge variant="outline" className="rounded-md text-[11px] border-[#E8E2DA] text-[#9C9490]">{bean.process}</Badge>}
                   </div>
                   {bean.roaster && (
-                    <p className="text-xs text-[#6B5D50]">烘焙商: {bean.roaster.name}</p>
+                    <p className="text-xs text-[#B8B0A8]">烘焙商: {bean.roaster.name}</p>
                   )}
                   {bean.flavorNotes && (
-                    <p className="text-xs text-[#8A7B6E] leading-relaxed">{bean.flavorNotes}</p>
+                    <p className="text-xs text-[#9C9490] leading-relaxed">{bean.flavorNotes}</p>
                   )}
                   {bean.score != null && (
                     <p className="text-sm font-semibold text-gradient-accent">评分: {bean.score}</p>

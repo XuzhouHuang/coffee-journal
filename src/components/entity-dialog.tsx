@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
+import { useIsAdmin } from "@/hooks/use-is-admin";
 
 export interface EntityField {
   name: string;
@@ -25,6 +26,7 @@ interface EntityDialogProps {
 }
 
 export function EntityDialog({ title, buttonLabel, apiEndpoint, fields }: EntityDialogProps) {
+  const isAdmin = useIsAdmin();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formKey, setFormKey] = useState(0);
@@ -62,6 +64,8 @@ export function EntityDialog({ title, buttonLabel, apiEndpoint, fields }: Entity
     }
   }
 
+  if (!isAdmin) return null;
+
   return (
     <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (o) setFormKey((k) => k + 1); }}>
       <DialogTrigger asChild>
@@ -74,9 +78,9 @@ export function EntityDialog({ title, buttonLabel, apiEndpoint, fields }: Entity
             <div key={f.name}>
               <Label>{f.label}{f.required ? " *" : ""}</Label>
               {f.type === "textarea" ? (
-                <Textarea name={f.name} required={f.required} placeholder={f.placeholder} className="rounded-lg bg-[rgba(255,255,255,0.04)]" />
+                <Textarea name={f.name} required={f.required} placeholder={f.placeholder} className="rounded-lg bg-[#F5F0EB]" />
               ) : (
-                <Input name={f.name} required={f.required} placeholder={f.placeholder} type={f.type === "url" ? "url" : "text"} className="rounded-lg bg-[rgba(255,255,255,0.04)]" />
+                <Input name={f.name} required={f.required} placeholder={f.placeholder} type={f.type === "url" ? "url" : "text"} className="rounded-lg bg-[#F5F0EB]" />
               )}
             </div>
           ))}

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Coffee, Menu, ShoppingBag, Home, MapPin, Leaf, Flame, Beaker, BookOpen, ChevronDown } from "lucide-react";
@@ -36,8 +37,8 @@ function NavLinks({ onClick }: { onClick?: () => void }) {
         href={item.href}
         onClick={onClick}
         className={cn(
-          "group flex items-center gap-3 px-3 py-2 text-sm transition-all border-l-2",
-          indent && "ml-4 text-[13px]",
+          "group flex items-center gap-3 px-3 py-2.5 text-base transition-all border-l-2",
+          indent && "ml-4 text-sm",
           isActive
             ? "border-[#8B7355] text-[#2C2825] font-medium"
             : "border-transparent text-[#9C9490] hover:text-[#2C2825] hover:border-[#D5CEC4]"
@@ -58,13 +59,13 @@ function NavLinks({ onClick }: { onClick?: () => void }) {
       {mainNavItems.map((item) => renderLink(item))}
 
       <div className="mt-8 mb-3 px-3">
-        <span className="text-[10px] font-medium uppercase tracking-[0.15em] text-[#B8B0A8]">Knowledge</span>
+        <span className="text-xs font-medium uppercase tracking-[0.15em] text-[#B8B0A8]">Knowledge</span>
       </div>
 
       <button
         onClick={() => setKnowledgeOpen(!knowledgeOpen)}
         className={cn(
-          "flex items-center gap-3 px-3 py-2 text-sm transition-all w-full border-l-2 border-transparent",
+          "flex items-center gap-3 px-3 py-2.5 text-base transition-all w-full border-l-2 border-transparent",
           isKnowledgeActive ? "text-[#2C2825]" : "text-[#9C9490] hover:text-[#2C2825]"
         )}
       >
@@ -78,6 +79,31 @@ function NavLinks({ onClick }: { onClick?: () => void }) {
         </div>
       )}
     </nav>
+  );
+}
+
+function AuthButton() {
+  const { data: session, status } = useSession();
+  if (status === "loading") return null;
+  if (session) {
+    return (
+      <button
+        onClick={() => signOut()}
+        className="flex items-center gap-2 text-xs text-[#9C9490] hover:text-[#2C2825] transition-colors w-full"
+      >
+        <span className="truncate">{session.user?.name || "已登录"}</span>
+        <span className="text-[#B8B0A8]">·</span>
+        <span className="shrink-0">退出</span>
+      </button>
+    );
+  }
+  return (
+    <button
+      onClick={() => signIn("azure-ad")}
+      className="text-xs text-[#9C9490] hover:text-[#2C2825] transition-colors"
+    >
+      管理员登录
+    </button>
   );
 }
 
@@ -97,7 +123,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <NavLinks />
         <div className="mt-auto pt-8 px-3">
           <div className="h-px bg-[#E8E2DA] mb-4" />
-          <p className="text-[10px] text-[#B8B0A8] leading-relaxed tracking-wider uppercase">
+          <AuthButton />
+          <p className="text-[10px] text-[#B8B0A8] leading-relaxed tracking-wider uppercase mt-3">
             Est. 2026
           </p>
         </div>
