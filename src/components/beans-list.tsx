@@ -81,12 +81,15 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold">咖啡豆</h1>
+    <div className="space-y-6 max-w-5xl mx-auto">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#6B5D50] mb-1">Bean Collection</p>
+          <h1 className="text-2xl font-bold text-[#F0EDE8] tracking-tight">咖啡豆</h1>
+        </div>
         <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
           <DialogTrigger asChild>
-            <Button className="gradient-btn"><Plus className="h-4 w-4 mr-2" />添加咖啡豆</Button>
+            <Button className="gradient-btn"><Plus className="h-4 w-4 mr-2" strokeWidth={1.5} />添加咖啡豆</Button>
           </DialogTrigger>
           <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto glass-card">
             <DialogHeader>
@@ -95,13 +98,13 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
             <form key={dialogKey} onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <Label>豆名 *</Label>
-                <Input name="name" required className="rounded-xl bg-white/[0.05] backdrop-blur-sm" />
+                <Input name="name" required className="rounded-lg bg-[rgba(255,255,255,0.04)]" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label>产区</Label>
                   <Select name="regionId">
-                    <SelectTrigger className="rounded-xl bg-white/[0.05]"><SelectValue placeholder="选择产区" /></SelectTrigger>
+                    <SelectTrigger className="rounded-lg bg-[rgba(255,255,255,0.04)]"><SelectValue placeholder="选择产区" /></SelectTrigger>
                     <SelectContent>
                       {meta.regions.map((r) => (
                         <SelectItem key={r.id} value={r.id.toString()}>{r.country} - {r.region}</SelectItem>
@@ -112,7 +115,7 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
                 <div>
                   <Label>品种</Label>
                   <Select name="varietyId">
-                    <SelectTrigger className="rounded-xl bg-white/[0.05]"><SelectValue placeholder="选择品种" /></SelectTrigger>
+                    <SelectTrigger className="rounded-lg bg-[rgba(255,255,255,0.04)]"><SelectValue placeholder="选择品种" /></SelectTrigger>
                     <SelectContent>
                       {meta.varieties.map((v) => (
                         <SelectItem key={v.id} value={v.id.toString()}>{v.name}</SelectItem>
@@ -124,7 +127,7 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
               <div>
                 <Label>烘焙商</Label>
                 <Select name="roasterId">
-                  <SelectTrigger className="rounded-xl bg-white/[0.05]"><SelectValue placeholder="选择烘焙商" /></SelectTrigger>
+                  <SelectTrigger className="rounded-lg bg-[rgba(255,255,255,0.04)]"><SelectValue placeholder="选择烘焙商" /></SelectTrigger>
                   <SelectContent>
                     {meta.roasters.map((r) => (
                       <SelectItem key={r.id} value={r.id.toString()}>{r.name}</SelectItem>
@@ -135,20 +138,20 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label>处理法</Label>
-                  <Input name="process" placeholder="水洗/日晒/蜜处理..." className="rounded-xl bg-white/[0.05]" />
+                  <Input name="process" placeholder="水洗/日晒/蜜处理..." className="rounded-lg bg-[rgba(255,255,255,0.04)]" />
                 </div>
                 <div>
                   <Label>烘焙度</Label>
-                  <Input name="roastLevel" placeholder="浅/中/深" className="rounded-xl bg-white/[0.05]" />
+                  <Input name="roastLevel" placeholder="浅/中/深" className="rounded-lg bg-[rgba(255,255,255,0.04)]" />
                 </div>
               </div>
               <div>
                 <Label>风味描述</Label>
-                <Textarea name="flavorNotes" placeholder="花香、柑橘、巧克力..." className="rounded-xl bg-white/[0.05]" />
+                <Textarea name="flavorNotes" placeholder="花香、柑橘、巧克力..." className="rounded-lg bg-[rgba(255,255,255,0.04)]" />
               </div>
               <div>
                 <Label>评分</Label>
-                <Input name="score" type="number" step="0.1" min="0" max="5" className="rounded-xl bg-white/[0.05]" />
+                <Input name="score" type="number" step="0.1" min="0" max="5" className="rounded-lg bg-[rgba(255,255,255,0.04)]" />
               </div>
               <Button type="submit" className="w-full gradient-btn">保存</Button>
             </form>
@@ -162,10 +165,10 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
           placeholder="搜索豆名..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="sm:max-w-xs rounded-xl bg-white/[0.05] backdrop-blur-sm"
+          className="sm:max-w-xs rounded-lg bg-[rgba(255,255,255,0.04)]"
         />
         <Select value={filterRegion} onValueChange={setFilterRegion}>
-          <SelectTrigger className="sm:max-w-[180px] rounded-xl bg-white/[0.05]"><SelectValue placeholder="筛选产区" /></SelectTrigger>
+          <SelectTrigger className="sm:max-w-[180px] rounded-lg bg-[rgba(255,255,255,0.04)]"><SelectValue placeholder="筛选产区" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">全部产区</SelectItem>
             {meta.regions.map((r) => (
@@ -174,7 +177,7 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
           </SelectContent>
         </Select>
         <Select value={filterVariety} onValueChange={setFilterVariety}>
-          <SelectTrigger className="sm:max-w-[180px] rounded-xl bg-white/[0.05]"><SelectValue placeholder="筛选品种" /></SelectTrigger>
+          <SelectTrigger className="sm:max-w-[180px] rounded-lg bg-[rgba(255,255,255,0.04)]"><SelectValue placeholder="筛选品种" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">全部品种</SelectItem>
             {meta.varieties.map((v) => (
@@ -185,35 +188,35 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
       </div>
 
       {beans.length >= 20 && (search || (filterRegion && filterRegion !== "all") || (filterVariety && filterVariety !== "all")) && (
-        <p className="text-xs text-muted-foreground">仅在已加载的 {beans.length} 条数据中筛选</p>
+        <p className="text-xs text-[#6B5D50]">仅在已加载的 {beans.length} 条数据中筛选</p>
       )}
 
       {/* Bean list */}
       {filtered.length === 0 ? (
-        <p className="text-muted-foreground py-8 text-center">暂无咖啡豆，点击上方按钮添加</p>
+        <p className="text-[#6B5D50] py-12 text-center text-sm">暂无咖啡豆，点击上方按钮添加</p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((bean) => (
             <Link key={bean.id} href={`/beans/${bean.id}`}>
-              <Card className="glass-card border-0 hover:shadow-xl hover:shadow-blue-500/10 hover:scale-[1.02] transition-all cursor-pointer h-full">
-                <CardHeader>
-                  <CardTitle className="text-base">{bean.name}</CardTitle>
+              <Card className="glass-card-interactive border-0 h-full">
+                <CardHeader className="pb-2 px-5 pt-5">
+                  <CardTitle className="text-base text-[#F0EDE8]">{bean.name}</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="flex flex-wrap gap-1">
-                    {bean.region && <Badge variant="secondary" className="rounded-full bg-blue-500/20 text-blue-300">{bean.region.country}</Badge>}
-                    {bean.variety && <Badge variant="outline" className="rounded-full">{bean.variety.name}</Badge>}
-                    {bean.roastLevel && <Badge className="rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white border-0">{bean.roastLevel}</Badge>}
-                    {bean.process && <Badge variant="outline" className="rounded-full">{bean.process}</Badge>}
+                <CardContent className="space-y-3 px-5 pb-5">
+                  <div className="flex flex-wrap gap-1.5">
+                    {bean.region && <Badge variant="secondary" className="rounded-md bg-[rgba(200,168,130,0.1)] text-[#C8A882] border-0 text-[11px] font-medium">{bean.region.country}</Badge>}
+                    {bean.variety && <Badge variant="outline" className="rounded-md text-[11px] border-[rgba(255,255,255,0.08)] text-[#8A7B6E]">{bean.variety.name}</Badge>}
+                    {bean.roastLevel && <Badge className="rounded-md bg-[rgba(200,168,130,0.15)] text-[#D4B896] border-0 text-[11px] font-medium">{bean.roastLevel}</Badge>}
+                    {bean.process && <Badge variant="outline" className="rounded-md text-[11px] border-[rgba(255,255,255,0.08)] text-[#8A7B6E]">{bean.process}</Badge>}
                   </div>
                   {bean.roaster && (
-                    <p className="text-sm text-muted-foreground">烘焙商: {bean.roaster.name}</p>
+                    <p className="text-xs text-[#6B5D50]">烘焙商: {bean.roaster.name}</p>
                   )}
                   {bean.flavorNotes && (
-                    <p className="text-sm text-muted-foreground">{bean.flavorNotes}</p>
+                    <p className="text-xs text-[#8A7B6E] leading-relaxed">{bean.flavorNotes}</p>
                   )}
                   {bean.score != null && (
-                    <p className="text-sm font-semibold bg-gradient-to-r from-blue-600 to-cyan-400 bg-clip-text text-transparent">评分: {bean.score}</p>
+                    <p className="text-sm font-semibold text-gradient-accent">评分: {bean.score}</p>
                   )}
                 </CardContent>
               </Card>

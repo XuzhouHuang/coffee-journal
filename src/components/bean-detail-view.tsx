@@ -9,7 +9,6 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Separator } from "@/components/ui/separator";
 import {
   Dialog,
   DialogContent,
@@ -69,75 +68,81 @@ export function BeanDetailView({ initialBean }: BeanDetailViewProps) {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-2">
+    <div className="space-y-8 max-w-4xl mx-auto">
+      <div className="flex items-center gap-3 pt-4">
         <Link href="/beans">
-          <Button variant="ghost" size="icon" className="rounded-xl"><ArrowLeft className="h-4 w-4" /></Button>
+          <Button variant="ghost" size="icon" className="rounded-lg h-9 w-9 text-[#8A7B6E] hover:text-[#C8A882]"><ArrowLeft className="h-4 w-4" strokeWidth={1.5} /></Button>
         </Link>
-        <h1 className="text-2xl font-bold">{bean.name}</h1>
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#6B5D50] mb-0.5">Bean Detail</p>
+          <h1 className="text-2xl font-bold text-[#F0EDE8] tracking-tight">{bean.name}</h1>
+        </div>
       </div>
 
       <Card className="glass-card border-0">
-        <CardContent className="pt-6 space-y-3">
-          <div className="flex flex-wrap gap-2">
-            {bean.region && <Badge variant="secondary" className="rounded-full bg-blue-500/20 text-blue-300">{bean.region.country} - {bean.region.region}</Badge>}
-            {bean.variety && <Badge variant="outline" className="rounded-full">{bean.variety.name}</Badge>}
-            {bean.roastLevel && <Badge className="rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white border-0">{bean.roastLevel}</Badge>}
-            {bean.process && <Badge variant="outline" className="rounded-full">{bean.process}</Badge>}
+        <CardContent className="pt-6 px-6 pb-6 space-y-4">
+          <div className="flex flex-wrap gap-1.5">
+            {bean.region && <Badge variant="secondary" className="rounded-md bg-[rgba(200,168,130,0.1)] text-[#C8A882] border-0 text-[11px] font-medium">{bean.region.country} - {bean.region.region}</Badge>}
+            {bean.variety && <Badge variant="outline" className="rounded-md text-[11px] border-[rgba(255,255,255,0.08)] text-[#8A7B6E]">{bean.variety.name}</Badge>}
+            {bean.roastLevel && <Badge className="rounded-md bg-[rgba(200,168,130,0.15)] text-[#D4B896] border-0 text-[11px] font-medium">{bean.roastLevel}</Badge>}
+            {bean.process && <Badge variant="outline" className="rounded-md text-[11px] border-[rgba(255,255,255,0.08)] text-[#8A7B6E]">{bean.process}</Badge>}
           </div>
-          {bean.roaster && <p className="text-sm">烘焙商: {bean.roaster.name} ({bean.roaster.country})</p>}
-          {bean.flavorNotes && <p className="text-sm">风味: {bean.flavorNotes}</p>}
-          {bean.variety?.flavor && <p className="text-sm text-muted-foreground">品种风味: {bean.variety.flavor}</p>}
-          {bean.score != null && <p className="text-sm font-semibold bg-gradient-to-r from-blue-600 to-cyan-400 bg-clip-text text-transparent">评分: {bean.score}</p>}
+          <div className="space-y-1.5 text-sm">
+            {bean.roaster && <p className="text-[#C8B4A0]">烘焙商: <span className="text-[#F0EDE8]">{bean.roaster.name}</span> <span className="text-[#6B5D50]">({bean.roaster.country})</span></p>}
+            {bean.flavorNotes && <p className="text-[#C8B4A0]">风味: <span className="text-[#F0EDE8]">{bean.flavorNotes}</span></p>}
+            {bean.variety?.flavor && <p className="text-[#6B5D50]">品种风味: {bean.variety.flavor}</p>}
+            {bean.score != null && <p className="font-semibold text-gradient-accent text-base">评分: {bean.score}</p>}
+          </div>
         </CardContent>
       </Card>
 
-      <Separator className="opacity-30" />
+      {/* Divider */}
+      <div className="h-px bg-gradient-to-r from-transparent via-[rgba(200,168,130,0.1)] to-transparent" />
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">购买记录</h2>
+          <h2 className="text-base font-semibold text-[#C8B4A0]">购买记录</h2>
           <Dialog open={purchaseOpen} onOpenChange={(open) => { setPurchaseOpen(open); if (open) setPurchaseKey((k) => k + 1); }}>
             <DialogTrigger asChild>
-              <Button size="sm" className="gradient-btn"><Plus className="h-4 w-4 mr-1" />添加购买</Button>
+              <Button size="sm" className="gradient-btn text-xs"><Plus className="h-3.5 w-3.5 mr-1" strokeWidth={1.5} />添加购买</Button>
             </DialogTrigger>
             <DialogContent className="glass-card">
               <DialogHeader><DialogTitle>添加购买记录</DialogTitle></DialogHeader>
               <form key={purchaseKey} onSubmit={handlePurchase} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <div><Label>价格 (元) *</Label><Input name="price" type="number" step="0.01" required className="rounded-xl bg-white/[0.05]" /></div>
-                  <div><Label>重量 (g) *</Label><Input name="weight" type="number" required className="rounded-xl bg-white/[0.05]" /></div>
+                  <div><Label>价格 (元) *</Label><Input name="price" type="number" step="0.01" required className="rounded-lg bg-[rgba(255,255,255,0.04)]" /></div>
+                  <div><Label>重量 (g) *</Label><Input name="weight" type="number" required className="rounded-lg bg-[rgba(255,255,255,0.04)]" /></div>
                 </div>
-                <div><Label>购买日期 *</Label><Input name="purchaseDate" type="date" required defaultValue={todayLocal()} className="rounded-xl bg-white/[0.05]" /></div>
-                <div><Label>购买渠道</Label><Input name="source" placeholder="淘宝/官网/线下..." className="rounded-xl bg-white/[0.05]" /></div>
-                <div><Label>备注</Label><Textarea name="notes" className="rounded-xl bg-white/[0.05]" /></div>
+                <div><Label>购买日期 *</Label><Input name="purchaseDate" type="date" required defaultValue={todayLocal()} className="rounded-lg bg-[rgba(255,255,255,0.04)]" /></div>
+                <div><Label>购买渠道</Label><Input name="source" placeholder="淘宝/官网/线下..." className="rounded-lg bg-[rgba(255,255,255,0.04)]" /></div>
+                <div><Label>备注</Label><Textarea name="notes" className="rounded-lg bg-[rgba(255,255,255,0.04)]" /></div>
                 <Button type="submit" className="w-full gradient-btn">保存</Button>
               </form>
             </DialogContent>
           </Dialog>
         </div>
         {bean.purchases.length === 0 ? (
-          <p className="text-muted-foreground text-sm">暂无购买记录</p>
+          <p className="text-[#6B5D50] text-sm">暂无购买记录</p>
         ) : (
           <div className="overflow-x-auto glass-card p-4">
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead>日期</TableHead>
-                  <TableHead>价格</TableHead>
-                  <TableHead>重量</TableHead>
-                  <TableHead>单价</TableHead>
-                  <TableHead>渠道</TableHead>
+                <TableRow className="border-[rgba(255,255,255,0.05)]">
+                  <TableHead className="text-[#6B5D50] text-xs">日期</TableHead>
+                  <TableHead className="text-[#6B5D50] text-xs">价格</TableHead>
+                  <TableHead className="text-[#6B5D50] text-xs">重量</TableHead>
+                  <TableHead className="text-[#6B5D50] text-xs">单价</TableHead>
+                  <TableHead className="text-[#6B5D50] text-xs">渠道</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {bean.purchases.map((p) => (
-                  <TableRow key={p.id} className="hover:bg-white/[0.05]">
-                    <TableCell>{new Date(p.purchaseDate).toLocaleDateString("zh-CN")}</TableCell>
-                    <TableCell>¥{p.price}</TableCell>
-                    <TableCell>{p.weight}g</TableCell>
-                    <TableCell>¥{(p.price / p.weight * 100).toFixed(0)}/100g</TableCell>
-                    <TableCell>{p.source || "-"}</TableCell>
+                  <TableRow key={p.id} className="border-[rgba(255,255,255,0.03)] hover:bg-[rgba(200,168,130,0.04)]">
+                    <TableCell className="text-sm text-[#8A7B6E]">{new Date(p.purchaseDate).toLocaleDateString("zh-CN")}</TableCell>
+                    <TableCell className="text-sm text-[#D4B896] font-medium">¥{p.price}</TableCell>
+                    <TableCell className="text-sm text-[#8A7B6E]">{p.weight}g</TableCell>
+                    <TableCell className="text-sm text-[#8A7B6E]">¥{(p.price / p.weight * 100).toFixed(0)}/100g</TableCell>
+                    <TableCell className="text-sm text-[#6B5D50]">{p.source || "-"}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -146,30 +151,30 @@ export function BeanDetailView({ initialBean }: BeanDetailViewProps) {
         )}
       </div>
 
-      <Separator className="opacity-30" />
+      <div className="h-px bg-gradient-to-r from-transparent via-[rgba(200,168,130,0.1)] to-transparent" />
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">冲煮记录</h2>
+          <h2 className="text-base font-semibold text-[#C8B4A0]">冲煮记录</h2>
           <Link href={`/beans/${bean.id}/brew`}>
-            <Button size="sm" className="gradient-btn"><Plus className="h-4 w-4 mr-1" />添加冲煮</Button>
+            <Button size="sm" className="gradient-btn text-xs"><Plus className="h-3.5 w-3.5 mr-1" strokeWidth={1.5} />添加冲煮</Button>
           </Link>
         </div>
         {bean.brewLogs.length === 0 ? (
-          <p className="text-muted-foreground text-sm">暂无冲煮记录</p>
+          <p className="text-[#6B5D50] text-sm">暂无冲煮记录</p>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2">
             {bean.brewLogs.map((log) => (
-              <Card key={log.id} className="glass-card border-0 hover:shadow-xl hover:shadow-blue-500/10 transition-all">
-                <CardHeader className="pb-2">
+              <Card key={log.id} className="glass-card border-0">
+                <CardHeader className="pb-2 px-5 pt-5">
                   <CardTitle className="text-sm flex items-center justify-between">
-                    <span>{log.brewMethod}</span>
-                    {log.rating != null && <Badge variant="secondary" className="rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white border-0">⭐ {log.rating}</Badge>}
+                    <span className="text-[#F0EDE8]">{log.brewMethod}</span>
+                    {log.rating != null && <Badge variant="secondary" className="rounded-md bg-[rgba(200,168,130,0.15)] text-[#D4B896] border-0 text-[11px]">⭐ {log.rating}</Badge>}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="text-sm space-y-1">
-                  <p className="text-muted-foreground">{new Date(log.brewDate).toLocaleDateString("zh-CN")}</p>
-                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-muted-foreground">
+                <CardContent className="text-sm space-y-2 px-5 pb-5">
+                  <p className="text-[#6B5D50] text-xs">{new Date(log.brewDate).toLocaleDateString("zh-CN")}</p>
+                  <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-[#8A7B6E]">
                     {log.dose != null && <span>粉量: {log.dose}g</span>}
                     {log.waterAmount != null && <span>水量: {log.waterAmount}ml</span>}
                     {log.ratio && <span>粉水比: {log.ratio}</span>}
@@ -177,7 +182,7 @@ export function BeanDetailView({ initialBean }: BeanDetailViewProps) {
                     {log.waterTemp != null && <span>水温: {log.waterTemp}°C</span>}
                     {log.brewTime && <span>时间: {log.brewTime}</span>}
                   </div>
-                  {log.notes && <p className="pt-1">{log.notes}</p>}
+                  {log.notes && <p className="pt-1 text-[#C8B4A0] text-xs">{log.notes}</p>}
                 </CardContent>
               </Card>
             ))}

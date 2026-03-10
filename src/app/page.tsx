@@ -53,60 +53,65 @@ export default async function HomePage() {
     .slice(0, 5);
 
   const statCards = [
-    { emoji: "☕", label: "咖啡豆种类", value: `${beanCount} 款`, gradient: "from-blue-500/20 to-blue-600/20" },
-    { emoji: "📝", label: "冲煮记录", value: `${brewCount} 次`, gradient: "from-blue-500/20 to-blue-600/20" },
-    { emoji: "💰", label: "本月消费", value: `¥${monthTotal.toFixed(0)}`, gradient: "from-blue-500/20 to-blue-600/20" },
-    { emoji: "⭐", label: "最高评分", value: maxRating != null ? maxRating.toFixed(1) : "-", gradient: "from-blue-500/20 to-blue-600/20" },
+    { emoji: "☕", label: "咖啡豆种类", value: `${beanCount} 款` },
+    { emoji: "📝", label: "冲煮记录", value: `${brewCount} 次` },
+    { emoji: "💰", label: "本月消费", value: `¥${monthTotal.toFixed(0)}` },
+    { emoji: "⭐", label: "最高评分", value: maxRating != null ? maxRating.toFixed(1) : "-" },
   ];
 
   return (
-    <div className="space-y-10 max-w-6xl mx-auto">
-      {/* Hero Welcome */}
-      <div className="space-y-3 pt-6 pb-2">
-        <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-400 via-blue-300 to-amber-400 bg-clip-text text-transparent font-[family-name:var(--font-brand)] tracking-tight">
+    <div className="max-w-5xl mx-auto space-y-10">
+      {/* Hero */}
+      <div className="pt-8 pb-2 animate-in-up">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#8A7B6E] mb-3">个人咖啡日志</p>
+        <h1 className="text-gradient-warm font-[family-name:var(--font-brand)] tracking-tight leading-[1.1]"
+            style={{ fontSize: 'var(--font-display)' }}>
           Coffee Journal
         </h1>
-        <p className="text-lg text-slate-400 tracking-wide">记录每一杯的味道 ☕</p>
+        <p className="text-[#8A7B6E] mt-3 text-sm tracking-wide">记录每一杯的味道</p>
       </div>
 
       {/* Stats */}
-      <div className="grid gap-5 grid-cols-2 lg:grid-cols-4">
-        {statCards.map((s) => (
-          <Card key={s.label} className="glass-card border-0">
-            <CardContent className="pt-6 pb-5 px-6">
-              <div className="flex items-center gap-4">
-                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${s.gradient} flex items-center justify-center text-2xl shrink-0`}>
-                  {s.emoji}
-                </div>
-                <div>
-                  <p className="text-sm text-slate-500 mb-1">{s.label}</p>
-                  <p className="text-3xl font-bold text-blue-400 tracking-tight">{s.value}</p>
-                </div>
+      <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+        {statCards.map((s, i) => (
+          <div key={s.label} className={`glass-card p-5 animate-in-up delay-${i + 1}`}>
+            <div className="flex items-start gap-3.5">
+              <div className="w-10 h-10 rounded-lg bg-[rgba(200,168,130,0.08)] flex items-center justify-center text-lg shrink-0">
+                {s.emoji}
               </div>
-            </CardContent>
-          </Card>
+              <div className="min-w-0">
+                <p className="text-[12px] text-[#6B5D50] mb-1 truncate">{s.label}</p>
+                <p className="text-2xl font-bold text-[#D4B896] tracking-tight leading-none">{s.value}</p>
+              </div>
+            </div>
+          </div>
         ))}
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2">
         {/* Recent brews */}
-        <Card className="glass-card border-0">
-          <CardHeader className="pb-2 px-8 pt-7">
-            <CardTitle className="text-lg">最近冲煮</CardTitle>
+        <Card className="glass-card border-0 animate-in-up delay-2">
+          <CardHeader className="pb-1 px-6 pt-6">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm font-semibold text-[#C8B4A0]">最近冲煮</CardTitle>
+              <Link href="/beans" className="text-[11px] text-[#6B5D50] hover:text-[#C8A882] transition-colors">
+                查看全部 →
+              </Link>
+            </div>
           </CardHeader>
-          <CardContent className="px-8 pb-7">
+          <CardContent className="px-6 pb-5">
             {recentBrews.length === 0 ? (
-              <p className="text-muted-foreground text-sm py-4">暂无冲煮记录</p>
+              <p className="text-[#6B5D50] text-sm py-6 text-center">暂无冲煮记录</p>
             ) : (
-              <div className="space-y-1">
+              <div className="space-y-0.5 mt-2">
                 {recentBrews.map((b) => (
-                  <div key={b.id} className="flex items-center justify-between text-sm px-4 py-3.5 rounded-xl hover:bg-white/[0.05] transition-colors">
-                    <div>
-                      <span className="font-medium text-base">{b.bean.name}</span>
-                      <span className="text-muted-foreground ml-3">{b.brewMethod}</span>
+                  <div key={b.id} className="flex items-center justify-between text-sm px-3 py-3 rounded-lg hover:bg-[rgba(200,168,130,0.04)] transition-colors">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="font-medium text-[#F0EDE8] truncate">{b.bean.name}</span>
+                      <span className="text-[#6B5D50] text-xs shrink-0">{b.brewMethod}</span>
                     </div>
-                    <div className="flex items-center gap-3 text-muted-foreground">
-                      {b.rating != null && <span className="text-blue-400">⭐ {b.rating}</span>}
+                    <div className="flex items-center gap-2.5 text-xs text-[#6B5D50] shrink-0 ml-3">
+                      {b.rating != null && <span className="text-[#C8A882]">⭐ {b.rating}</span>}
                       <span>{new Date(b.brewDate).toLocaleDateString("zh-CN")}</span>
                     </div>
                   </div>
@@ -117,23 +122,28 @@ export default async function HomePage() {
         </Card>
 
         {/* Recent purchases */}
-        <Card className="glass-card border-0">
-          <CardHeader className="pb-2 px-8 pt-7">
-            <CardTitle className="text-lg">最近消费</CardTitle>
+        <Card className="glass-card border-0 animate-in-up delay-3">
+          <CardHeader className="pb-1 px-6 pt-6">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm font-semibold text-[#C8B4A0]">最近消费</CardTitle>
+              <Link href="/purchases" className="text-[11px] text-[#6B5D50] hover:text-[#C8A882] transition-colors">
+                查看全部 →
+              </Link>
+            </div>
           </CardHeader>
-          <CardContent className="px-8 pb-7">
+          <CardContent className="px-6 pb-5">
             {recentPurchases.length === 0 ? (
-              <p className="text-muted-foreground text-sm py-4">暂无消费记录</p>
+              <p className="text-[#6B5D50] text-sm py-6 text-center">暂无消费记录</p>
             ) : (
-              <div className="space-y-1">
+              <div className="space-y-0.5 mt-2">
                 {recentPurchases.map((p) => (
-                  <div key={p.id} className="flex items-center justify-between text-sm px-4 py-3.5 rounded-xl hover:bg-white/[0.05] transition-colors">
-                    <div>
-                      <span className="font-medium text-base">{p.name}</span>
-                      <span className="text-muted-foreground ml-3 text-xs bg-white/[0.08] px-2 py-0.5 rounded-full">{p.type}</span>
+                  <div key={p.id} className="flex items-center justify-between text-sm px-3 py-3 rounded-lg hover:bg-[rgba(200,168,130,0.04)] transition-colors">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="font-medium text-[#F0EDE8] truncate">{p.name}</span>
+                      <span className="text-[10px] text-[#8A7B6E] bg-[rgba(255,255,255,0.04)] px-1.5 py-0.5 rounded shrink-0">{p.type}</span>
                     </div>
-                    <div className="flex items-center gap-3 text-muted-foreground">
-                      <span className="text-blue-400 font-medium">¥{p.price}</span>
+                    <div className="flex items-center gap-2.5 text-xs text-[#6B5D50] shrink-0 ml-3">
+                      <span className="text-[#C8A882] font-medium">¥{p.price}</span>
                       <span>{new Date(p.date).toLocaleDateString("zh-CN")}</span>
                     </div>
                   </div>

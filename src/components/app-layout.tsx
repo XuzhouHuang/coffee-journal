@@ -36,42 +36,50 @@ function NavLinks({ onClick }: { onClick?: () => void }) {
         href={item.href}
         onClick={onClick}
         className={cn(
-          "flex items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-bold transition-all",
-          indent && "ml-3 text-[14px]",
+          "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all",
+          indent && "ml-4 text-[13px]",
           isActive
-            ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-md shadow-blue-500/30"
-            : "text-slate-400 hover:bg-white/[0.05] hover:text-white"
+            ? "bg-[rgba(200,168,130,0.12)] text-[#D4B896]"
+            : "text-[#8A7B6E] hover:bg-[rgba(255,255,255,0.04)] hover:text-[#C8B4A0]"
         )}
       >
-        <item.icon className={cn("h-5 w-5", indent && "h-4 w-4")} />
+        <item.icon className={cn(
+          "shrink-0 transition-colors",
+          indent ? "h-4 w-4" : "h-[18px] w-[18px]",
+          isActive ? "text-[#C8A882]" : "text-[#6B5D50] group-hover:text-[#8A7B6E]"
+        )} />
         {item.label}
+        {isActive && (
+          <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[#C8A882]" />
+        )}
       </Link>
     );
   };
 
   return (
-    <nav className="flex flex-col gap-1.5">
+    <nav className="flex flex-col gap-0.5">
       {mainNavItems.map((item) => renderLink(item))}
 
-      {/* Knowledge Base Group */}
-      <div className="mt-3">
-        <button
-          onClick={() => setKnowledgeOpen(!knowledgeOpen)}
-          className={cn(
-            "flex items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-bold transition-all w-full",
-            isKnowledgeActive ? "text-blue-400" : "text-slate-400 hover:text-white"
-          )}
-        >
-          <BookOpen className="h-5 w-5" />
-          <span className="flex-1 text-left">知识库</span>
-          <ChevronDown className={cn("h-4 w-4 transition-transform", knowledgeOpen && "rotate-180")} />
-        </button>
-        {knowledgeOpen && (
-          <div className="flex flex-col gap-1 mt-1">
-            {knowledgeItems.map((item) => renderLink(item, true))}
-          </div>
-        )}
+      <div className="mt-6 mb-2 px-3">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#5A4D42]">知识库</span>
       </div>
+
+      <button
+        onClick={() => setKnowledgeOpen(!knowledgeOpen)}
+        className={cn(
+          "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all w-full",
+          isKnowledgeActive ? "text-[#C8B4A0]" : "text-[#8A7B6E] hover:text-[#C8B4A0]"
+        )}
+      >
+        <BookOpen className="h-[18px] w-[18px] shrink-0" strokeWidth={1.5} />
+        <span className="flex-1 text-left">全部分类</span>
+        <ChevronDown className={cn("h-3.5 w-3.5 transition-transform text-[#6B5D50]", knowledgeOpen && "rotate-180")} />
+      </button>
+      {knowledgeOpen && (
+        <div className="flex flex-col gap-0.5 mt-0.5">
+          {knowledgeItems.map((item) => renderLink(item, true))}
+        </div>
+      )}
     </nav>
   );
 }
@@ -82,39 +90,48 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen">
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex w-64 flex-col bg-[rgba(10,15,26,0.7)] backdrop-blur-xl border-r border-white/[0.08] p-4">
-        <Link href="/" className="flex items-center gap-2 mb-6 px-3">
-          <span className="text-2xl">☕</span>
-          <span className="text-lg font-bold text-foreground font-[family-name:var(--font-brand)]">Coffee Journal</span>
+      <aside className="hidden md:flex w-60 flex-col border-r border-[rgba(255,255,255,0.05)] p-5 sticky top-0 h-screen"
+        style={{ background: 'rgba(22, 18, 14, 0.85)', backdropFilter: 'blur(24px)' }}>
+        <Link href="/" className="flex items-center gap-2.5 mb-8 px-3 group">
+          <span className="text-xl transition-transform group-hover:rotate-12">☕</span>
+          <span className="text-base font-bold text-[#D4B896] font-[family-name:var(--font-brand)] tracking-tight">Coffee Journal</span>
         </Link>
         <NavLinks />
+        <div className="mt-auto pt-6 px-3">
+          <div className="h-px bg-gradient-to-r from-transparent via-[rgba(200,168,130,0.15)] to-transparent mb-4" />
+          <p className="text-[11px] text-[#5A4D42] leading-relaxed">
+            记录每一杯的味道
+          </p>
+        </div>
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile header */}
-        <header className="md:hidden flex items-center justify-between bg-white/[0.05] backdrop-blur-xl border-b border-white/[0.08] p-4">
+        <header className="md:hidden flex items-center justify-between border-b border-[rgba(255,255,255,0.05)] px-5 py-4"
+          style={{ background: 'rgba(22, 18, 14, 0.9)', backdropFilter: 'blur(24px)' }}>
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-xl">☕</span>
-            <span className="font-bold text-foreground font-[family-name:var(--font-brand)]">Coffee Journal</span>
+            <span className="text-lg">☕</span>
+            <span className="text-sm font-bold text-[#D4B896] font-[family-name:var(--font-brand)]">Coffee Journal</span>
           </Link>
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-xl">
-                <Menu className="h-5 w-5" />
+              <Button variant="ghost" size="icon" className="rounded-lg h-9 w-9">
+                <Menu className="h-5 w-5 text-[#8A7B6E]" strokeWidth={1.5} />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-60 bg-[rgba(10,15,26,0.7)] backdrop-blur-xl border-white/[0.08]">
-              <div className="flex items-center gap-2 mb-6 px-3 pt-4">
-                <span className="text-2xl">☕</span>
-                <span className="text-lg font-bold text-foreground font-[family-name:var(--font-brand)]">Coffee Journal</span>
+            <SheetContent side="left" className="w-60 border-[rgba(255,255,255,0.05)]"
+              style={{ background: 'rgba(22, 18, 14, 0.95)', backdropFilter: 'blur(24px)' }}>
+              <div className="flex items-center gap-2 mb-8 px-3 pt-4">
+                <span className="text-xl">☕</span>
+                <span className="text-base font-bold text-[#D4B896] font-[family-name:var(--font-brand)]">Coffee Journal</span>
               </div>
               <NavLinks onClick={() => setOpen(false)} />
             </SheetContent>
           </Sheet>
         </header>
 
-        <main className="flex-1 p-6 md:p-10">{children}</main>
+        <main className="flex-1 p-5 md:p-8 lg:p-10">{children}</main>
       </div>
     </div>
   );
