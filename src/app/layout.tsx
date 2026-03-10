@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { LXGW_WenKai_TC, Noto_Sans_SC } from "next/font/google";
+import { Noto_Serif_SC, DM_Serif_Display } from "next/font/google";
 import "./globals.css";
 import { AppLayout } from "@/components/app-layout";
 import { Toaster } from "@/components/ui/sonner";
 
-const brandFont = LXGW_WenKai_TC({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-brand" });
-const bodyFont = Noto_Sans_SC({ subsets: ["latin"], weight: ["400", "500", "700"], variable: "--font-body" });
+const bodyFont = Noto_Serif_SC({ subsets: ["latin"], weight: ["300", "400", "500", "600"], variable: "--font-body" });
+const serifFont = DM_Serif_Display({ subsets: ["latin"], weight: ["400"], variable: "--font-serif" });
 
 export const metadata: Metadata = {
   title: "Coffee Journal",
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="zh-CN" className={`${brandFont.variable} ${bodyFont.variable}`}>
+    <html lang="zh-CN" className={`${bodyFont.variable} ${serifFont.variable}`}>
       <body className="antialiased min-h-screen">
         <AppLayout>{children}</AppLayout>
         <Toaster />
