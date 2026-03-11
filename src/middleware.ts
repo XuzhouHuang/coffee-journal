@@ -4,6 +4,11 @@ import { jwtVerify, createRemoteJWKSet } from "jose";
 
 const SAFE_METHODS = ["GET", "HEAD", "OPTIONS"];
 
+// Allowed Managed Identity Object IDs (oid claim in token)
+const ALLOWED_MI_OIDS = [
+  "96c00c55-ff04-4742-9abf-10165f108780", // openclaw MI
+];
+
 export async function middleware(request: NextRequest) {
   // Only protect API routes
   if (!request.nextUrl.pathname.startsWith("/api")) {
@@ -40,13 +45,20 @@ export async function middleware(request: NextRequest) {
       new URL(`https://login.microsoftonline.com/${tenantId}/discovery/v2.0/keys`)
     );
 
-    await jwtVerify(token, JWKS, {
+    const { payload } = await jwtVerify(token, JWKS, {
       issuer: [
         `https://login.microsoftonline.com/${tenantId}/v2.0`,
         `https://sts.windows.net/${tenantId}/`,
       ],
-      audience: clientId,
+      audience: [clientId, `api://${clientId}`],
     });
+
+    // If it's an app/service principal token (Managed Identity), verify oid is whitelisted
+    if (payload.idtyp === "app" && payload.oid) {
+      if (!ALLOWED_MI_OIDS.includes(payload.oid as string)) {
+        return NextResponse.json({ error: "Unauthorized app identity" }, { status: 403 });
+      }
+    }
 
     return NextResponse.next();
   } catch (err) {
