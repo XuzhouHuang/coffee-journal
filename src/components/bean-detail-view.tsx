@@ -1,4 +1,5 @@
 "use client";
+import { useAuth } from "@/components/auth-provider";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -27,7 +28,6 @@ import {
 import { Plus, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { todayLocal } from "@/lib/utils";
-import { useIsAdmin } from "@/hooks/use-is-admin";
 import type { BeanDetail } from "@/types";
 
 interface BeanDetailViewProps {
@@ -35,7 +35,7 @@ interface BeanDetailViewProps {
 }
 
 export function BeanDetailView({ initialBean }: BeanDetailViewProps) {
-  const isAdmin = useIsAdmin();
+  const { isAdmin } = useAuth();
   const router = useRouter();
   const [bean, setBean] = useState<BeanDetail>(initialBean);
   const [purchaseOpen, setPurchaseOpen] = useState(false);

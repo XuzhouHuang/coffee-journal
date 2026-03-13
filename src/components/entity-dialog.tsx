@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
-import { useIsAdmin } from "@/hooks/use-is-admin";
+import { useAuth } from "@/components/auth-provider";
 
 export interface EntityField {
   name: string;
@@ -26,7 +26,7 @@ interface EntityDialogProps {
 }
 
 export function EntityDialog({ title, buttonLabel, apiEndpoint, fields }: EntityDialogProps) {
-  const isAdmin = useIsAdmin();
+  const { isAdmin } = useAuth();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formKey, setFormKey] = useState(0);

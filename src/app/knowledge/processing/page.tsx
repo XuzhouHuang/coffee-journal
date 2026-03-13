@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ProcessingDialog } from "./processing-dialog";
+import { AdminOnly } from "@/components/admin-only";
 
 export const dynamic = "force-dynamic";
 export default async function ProcessingPage() {
@@ -14,7 +15,7 @@ export default async function ProcessingPage() {
           <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#B8B0A8] mb-1">Processing Methods</p>
           <h1 className="text-2xl font-bold text-[#2C2825] tracking-tight">🧪 处理法</h1>
         </div>
-        <ProcessingDialog />
+        <AdminOnly><ProcessingDialog /></AdminOnly>
       </div>
       {methods.length === 0 ? (
         <p className="text-[#B8B0A8] text-center py-12 text-sm">暂无处理法数据，点击右上角添加</p>

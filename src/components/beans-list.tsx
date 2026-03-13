@@ -1,4 +1,5 @@
 "use client";
+import { useAuth } from "@/components/auth-provider";
 
 import { useState, useCallback } from "react";
 import Link from "next/link";
@@ -24,7 +25,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
-import { useIsAdmin } from "@/hooks/use-is-admin";
 import type { Bean, Meta } from "@/types";
 
 interface BeansListProps {
@@ -33,7 +33,7 @@ interface BeansListProps {
 }
 
 export function BeansList({ initialBeans, meta }: BeansListProps) {
-  const isAdmin = useIsAdmin();
+  const { isAdmin } = useAuth();
   const [beans, setBeans] = useState<Bean[]>(initialBeans);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogKey, setDialogKey] = useState(0);

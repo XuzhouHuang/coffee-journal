@@ -31,7 +31,7 @@ export default async function BeanDetailPage({ params }: { params: Promise<{ id:
     roaster: bean.roaster ? { name: bean.roaster.name, country: bean.roaster.country } : null,
     region: bean.region ? { country: bean.region.country, region: bean.region.region } : null,
     variety: bean.variety ? { name: bean.variety.name, flavor: bean.variety.flavor } : null,
-    purchases: bean.purchases.map((p) => ({
+    purchases: bean.purchases.map((p: any) => ({
       id: p.id,
       price: p.price,
       weight: p.weight,
@@ -39,7 +39,7 @@ export default async function BeanDetailPage({ params }: { params: Promise<{ id:
       source: p.source,
       notes: p.notes,
     })),
-    brewLogs: bean.brewLogs.map((l) => ({
+    brewLogs: bean.brewLogs.map((l: any) => ({
       id: l.id,
       brewMethod: l.brewMethod,
       dose: l.dose,

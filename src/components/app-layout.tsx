@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Coffee, Menu, ShoppingBag, Home, MapPin, Leaf, Flame, Beaker, BookOpen, ChevronDown } from "lucide-react";
+import { Coffee, Menu, ShoppingBag, Home, MapPin, Leaf, Flame, Beaker, BookOpen, ChevronDown, LogIn, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/components/auth-provider";
 
 const mainNavItems = [
   { href: "/", label: "首页", icon: Home },
@@ -83,26 +83,33 @@ function NavLinks({ onClick }: { onClick?: () => void }) {
 }
 
 function AuthButton() {
-  const { data: session, status } = useSession();
-  if (status === "loading") return null;
-  if (session) {
+  const { isAdmin, logout } = useAuth();
+
+  if (isAdmin) {
     return (
       <button
-        onClick={() => signOut()}
-        className="flex items-center gap-2 text-xs text-[#9C9490] hover:text-[#2C2825] transition-colors w-full"
+        onClick={() => {
+          logout();
+          // Also clear Easy Auth session
+          window.location.href = "/.auth/logout?post_logout_redirect_uri=/";
+        }}
+        className="flex items-center gap-2 text-xs text-[#9C9490] hover:text-[#2C2825] transition-colors"
       >
-        <span className="truncate">{session.user?.name || "已登录"}</span>
-        <span className="text-[#B8B0A8]">·</span>
-        <span className="shrink-0">退出</span>
+        <LogOut className="h-3 w-3" />
+        <span>退出管理</span>
       </button>
     );
   }
+
   return (
     <button
-      onClick={() => signIn("azure-ad")}
-      className="text-xs text-[#9C9490] hover:text-[#2C2825] transition-colors"
+      onClick={() => {
+        window.location.href = "/.auth/login/aad?post_login_redirect_uri=" + encodeURIComponent(window.location.pathname);
+      }}
+      className="flex items-center gap-2 text-xs text-[#9C9490] hover:text-[#2C2825] transition-colors"
     >
-      管理员登录
+      <LogIn className="h-3 w-3" />
+      <span>管理员登录</span>
     </button>
   );
 }

@@ -1,20 +1,21 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "sqlserver"
   url      = env("DATABASE_URL")
 }
 
 model Region {
   id        Int      @id @default(autoincrement())
-  country   String
-  region    String
-  subRegion String?
-  altitude  String?
-  climate   String?
-  notes     String?
+  country   String   @db.NVarChar(255)
+  region    String   @db.NVarChar(255)
+  subRegion String?  @db.NVarChar(255)
+  altitude  String?  @db.NVarChar(255)
+  climate   String?  @db.NVarChar(255)
+  notes     String?  @db.NVarChar(Max)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   beans     Bean[]
@@ -24,9 +25,9 @@ model Region {
 
 model Variety {
   id          Int      @id @default(autoincrement())
-  name        String   @unique
-  description String?
-  flavor      String?
+  name        String   @unique @db.NVarChar(255)
+  description String?  @db.NVarChar(Max)
+  flavor      String?  @db.NVarChar(Max)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   beans       Bean[]
@@ -34,12 +35,12 @@ model Variety {
 
 model Roaster {
   id        Int      @id @default(autoincrement())
-  name      String   @unique
-  country   String
-  specialty String?
-  website   String?
-  shopUrl   String?
-  notes     String?
+  name      String   @unique @db.NVarChar(255)
+  country   String   @db.NVarChar(255)
+  specialty String?  @db.NVarChar(255)
+  website   String?  @db.NVarChar(255)
+  shopUrl   String?  @db.NVarChar(255)
+  notes     String?  @db.NVarChar(Max)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   beans     Bean[]
@@ -47,13 +48,13 @@ model Roaster {
 
 model Bean {
   id          Int            @id @default(autoincrement())
-  name        String
+  name        String         @db.NVarChar(255)
   roasterId   Int?
   regionId    Int?
   varietyId    Int?
-  process     String?
-  roastLevel  String?
-  flavorNotes String?
+  process     String?        @db.NVarChar(255)
+  roastLevel  String?        @db.NVarChar(255)
+  flavorNotes String?        @db.NVarChar(Max)
   score       Float?
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
@@ -70,8 +71,8 @@ model BeanPurchase {
   price        Float
   weight       Int
   purchaseDate DateTime
-  source       String?
-  notes        String?
+  source       String?  @db.NVarChar(255)
+  notes        String?  @db.NVarChar(Max)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   bean         Bean     @relation(fields: [beanId], references: [id], onDelete: Cascade)
@@ -80,15 +81,15 @@ model BeanPurchase {
 model BrewLog {
   id          Int      @id @default(autoincrement())
   beanId      Int
-  brewMethod  String
+  brewMethod  String   @db.NVarChar(255)
   dose        Float?
   waterAmount Float?
-  ratio       String?
-  grindSize   String?
+  ratio       String?  @db.NVarChar(255)
+  grindSize   String?  @db.NVarChar(255)
   waterTemp   Int?
-  brewTime    String?
+  brewTime    String?  @db.NVarChar(255)
   rating      Float?
-  notes       String?
+  notes       String?  @db.NVarChar(Max)
   brewDate    DateTime
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -97,25 +98,38 @@ model BrewLog {
 
 model ProcessingMethod {
   id          Int      @id @default(autoincrement())
-  name        String   @unique
-  description String?
-  flavorNotes String?
-  suitable    String?
+  name        String   @unique @db.NVarChar(255)
+  description String?  @db.NVarChar(Max)
+  flavorNotes String?  @db.NVarChar(Max)
+  suitable    String?  @db.NVarChar(Max)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
+model EquipmentPurchase {
+  id           Int      @id @default(autoincrement())
+  name         String   @db.NVarChar(255)
+  category     String   @db.NVarChar(255) // 滤杯/手冲壶/磨豆机/电子秤/滤纸/其他
+  brand        String?  @db.NVarChar(255)
+  price        Float
+  purchaseDate DateTime
+  source       String?  @db.NVarChar(255) // 购买渠道
+  notes        String?  @db.NVarChar(Max)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
 model CafePurchase {
   id           Int      @id @default(autoincrement())
-  cafeName     String
-  location     String?
-  drinkName    String
-  drinkType    String?
+  cafeName     String   @db.NVarChar(255)
+  location     String?  @db.NVarChar(255)
+  drinkName    String   @db.NVarChar(255)
+  drinkType    String?  @db.NVarChar(255)
   price        Float
   purchaseDate DateTime
   rating       Float?
-  notes        String?
-  photo        String?
+  notes        String?  @db.NVarChar(Max)
+  photo        String?  @db.NVarChar(Max)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }

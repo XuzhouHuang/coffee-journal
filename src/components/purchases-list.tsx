@@ -1,4 +1,5 @@
 "use client";
+import { useAuth } from "@/components/auth-provider";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -23,28 +24,41 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { useIsAdmin } from "@/hooks/use-is-admin";
 import type { BeanPurchase, CafePurchase } from "@/types";
+
+interface EquipmentPurchase {
+  id: number;
+  name: string;
+  category: string;
+  brand: string | null;
+  price: number;
+  purchaseDate: string;
+  source: string | null;
+  notes: string | null;
+}
 
 interface PurchaseStats {
   monthBeans: number;
   monthCafe: number;
+  monthEquipment: number;
   monthTotal: number;
   monthCount: number;
-  monthlyData: { month: string; beans: number; cafe: number }[];
+  monthlyData: { month: string; beans: number; cafe: number; equipment: number }[];
 }
 
 interface PurchasesListProps {
   initialBeanPurchases: BeanPurchase[];
   initialCafePurchases: CafePurchase[];
+  initialEquipmentPurchases: EquipmentPurchase[];
   stats: PurchaseStats;
 }
 
-export function PurchasesList({ initialBeanPurchases, initialCafePurchases, stats }: PurchasesListProps) {
-  const isAdmin = useIsAdmin();
-  const [tab, setTab] = useState<"beans" | "cafe">("beans");
+export function PurchasesList({ initialBeanPurchases, initialCafePurchases, initialEquipmentPurchases, stats }: PurchasesListProps) {
+  const { isAdmin } = useAuth();
+  const [tab, setTab] = useState<"beans" | "cafe" | "equipment">("beans");
   const beanPurchases = initialBeanPurchases;
   const cafePurchases = initialCafePurchases;
+  const equipmentPurchases = initialEquipmentPurchases;
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
@@ -63,8 +77,8 @@ export function PurchasesList({ initialBeanPurchases, initialCafePurchases, stat
         {[
           { label: "本月豆子消费", value: `¥${stats.monthBeans.toFixed(0)}` },
           { label: "本月咖啡店消费", value: `¥${stats.monthCafe.toFixed(0)}` },
+          { label: "本月器具消费", value: `¥${stats.monthEquipment.toFixed(0)}` },
           { label: "本月总消费", value: `¥${stats.monthTotal.toFixed(0)}` },
-          { label: "本月消费次数", value: `${stats.monthCount} 次` },
         ].map((s) => (
           <div key={s.label} className="glass-card p-4">
             <p className="text-[12px] text-[#B8B0A8] mb-1">{s.label}</p>
@@ -97,6 +111,7 @@ export function PurchasesList({ initialBeanPurchases, initialCafePurchases, stat
                 <Legend wrapperStyle={{ fontSize: '12px', color: '#9C9490' }} />
                 <Bar dataKey="beans" name="豆子" fill="#8B7355" radius={[4, 4, 0, 0]} />
                 <Bar dataKey="cafe" name="咖啡店" fill="#8A6340" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="equipment" name="器具" fill="#A0926B" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -123,6 +138,16 @@ export function PurchasesList({ initialBeanPurchases, initialCafePurchases, stat
           }`}
         >
           咖啡店消费 ({cafePurchases.length})
+        </button>
+        <button
+          onClick={() => setTab("equipment")}
+          className={`text-sm font-medium px-4 py-2 rounded-lg transition-colors ${
+            tab === "equipment"
+              ? "bg-[#F0ECE6] text-[#8B7355]"
+              : "text-[#B8B0A8] hover:text-[#6B6058] hover:bg-[#F5F0EB]"
+          }`}
+        >
+          咖啡器具 ({equipmentPurchases.length})
         </button>
       </div>
 
@@ -189,6 +214,36 @@ export function PurchasesList({ initialBeanPurchases, initialCafePurchases, stat
                       <span>{new Date(p.purchaseDate).toLocaleDateString("zh-CN")}</span>
                       {p.rating != null && <span className="text-[#8B7355]">⭐ {p.rating}</span>}
                     </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
+      {tab === "equipment" && (
+        <>
+          {equipmentPurchases.length === 0 ? (
+            <p className="text-[#B8B0A8] text-center py-12 text-sm">暂无器具购买记录</p>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {equipmentPurchases.map((p) => (
+                <Card key={p.id} className="glass-card-interactive border-0">
+                  <CardHeader className="pb-2 px-5 pt-5">
+                    <CardTitle className="text-base flex items-center justify-between">
+                      <span className="text-[#2C2825]">{p.name}</span>
+                      <span className="text-sm font-medium text-[#8B7355]">¥{p.price}</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-sm space-y-2 px-5 pb-5">
+                    <div className="flex flex-wrap gap-1.5">
+                      <Badge variant="outline" className="rounded-md text-[11px] border-[#E8E2DA] text-[#9C9490]">{p.category}</Badge>
+                      {p.brand && <Badge variant="secondary" className="rounded-md bg-[#F0ECE6] text-[#8B7355] border-0 text-[11px]">{p.brand}</Badge>}
+                      {p.source && <Badge variant="secondary" className="rounded-md bg-[#F5F0EB] text-[#9C9490] border-0 text-[11px]">{p.source}</Badge>}
+                    </div>
+                    {p.notes && <p className="text-[#9C9490] text-xs">{p.notes}</p>}
+                    <p className="text-[#B8B0A8] text-xs pt-1">{new Date(p.purchaseDate).toLocaleDateString("zh-CN")}</p>
                   </CardContent>
                 </Card>
               ))}

@@ -8,11 +8,12 @@ export default async function HomePage() {
   const now = new Date();
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-  const [beanCount, brewCount, monthBeanSpend, monthCafeSpend, topRating, recentBrews, recentBeanPurchases, recentCafePurchases] = await Promise.all([
+  const [beanCount, brewCount, monthBeanSpend, monthCafeSpend, monthEquipmentSpend, topRating, recentBrews, recentBeanPurchases, recentCafePurchases, recentEquipmentPurchases] = await Promise.all([
     prisma.bean.count(),
     prisma.brewLog.count(),
     prisma.beanPurchase.aggregate({ _sum: { price: true }, where: { purchaseDate: { gte: startOfMonth } } }),
     prisma.cafePurchase.aggregate({ _sum: { price: true }, where: { purchaseDate: { gte: startOfMonth } } }),
+    prisma.equipmentPurchase.aggregate({ _sum: { price: true }, where: { purchaseDate: { gte: startOfMonth } } }),
     prisma.brewLog.aggregate({ _max: { rating: true } }),
     prisma.brewLog.findMany({
       take: 5,
@@ -28,25 +29,36 @@ export default async function HomePage() {
       take: 5,
       orderBy: { purchaseDate: "desc" },
     }),
+    prisma.equipmentPurchase.findMany({
+      take: 5,
+      orderBy: { purchaseDate: "desc" },
+    }),
   ]);
 
-  const monthTotal = (monthBeanSpend._sum.price || 0) + (monthCafeSpend._sum.price || 0);
+  const monthTotal = (monthBeanSpend._sum.price || 0) + (monthCafeSpend._sum.price || 0) + (monthEquipmentSpend._sum.price || 0);
   const maxRating = topRating._max.rating;
 
   const recentPurchases = [
-    ...recentBeanPurchases.map((p) => ({
+    ...recentBeanPurchases.map((p: any) => ({
       id: `b-${p.id}`,
       name: p.bean.name,
       price: p.price,
       date: p.purchaseDate,
       type: "豆子" as const,
     })),
-    ...recentCafePurchases.map((p) => ({
+    ...recentCafePurchases.map((p: any) => ({
       id: `c-${p.id}`,
       name: `${p.cafeName} · ${p.drinkName}`,
       price: p.price,
       date: p.purchaseDate,
       type: "咖啡店" as const,
+    })),
+    ...recentEquipmentPurchases.map((p: any) => ({
+      id: `e-${p.id}`,
+      name: p.name,
+      price: p.price,
+      date: p.purchaseDate,
+      type: "器具" as const,
     })),
   ]
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
@@ -136,7 +148,7 @@ export default async function HomePage() {
               <p className="text-[#B8B0A8] text-sm py-6 text-center">暂无消费记录</p>
             ) : (
               <div className="space-y-0.5 mt-2">
-                {recentPurchases.map((p) => (
+                {recentPurchases.map((p: any) => (
                   <div key={p.id} className="flex items-center justify-between text-sm px-3 py-3 rounded-lg hover:bg-[rgba(200,168,130,0.04)] transition-colors">
                     <div className="flex items-center gap-2 min-w-0">
                       <span className="font-medium text-[#2C2825] truncate">{p.name}</span>

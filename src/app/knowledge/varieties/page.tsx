@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { VarietyDialog } from "./variety-dialog";
+import { AdminOnly } from "@/components/admin-only";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +15,7 @@ export default async function VarietiesPage() {
           <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#B8B0A8] mb-1">Varieties</p>
           <h1 className="text-2xl font-bold text-[#2C2825] tracking-tight">🌱 品种</h1>
         </div>
-        <VarietyDialog />
+        <AdminOnly><VarietyDialog /></AdminOnly>
       </div>
       {varieties.length === 0 ? (
         <p className="text-[#B8B0A8] text-center py-12 text-sm">暂无品种数据，点击右上角添加</p>
