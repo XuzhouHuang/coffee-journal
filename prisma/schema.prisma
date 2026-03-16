@@ -133,3 +133,32 @@ model CafePurchase {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
+
+model BreadPurchase {
+  id           Int      @id @default(autoincrement())
+  bakeryName   String   @db.NVarChar(255)
+  location     String?  @db.NVarChar(255)
+  breadName    String   @db.NVarChar(255)
+  breadType    String?  @db.NVarChar(255)
+  price        Float
+  purchaseDate DateTime
+  notes        String?  @db.NVarChar(Max)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model BreadRecipe {
+  id           Int      @id @default(autoincrement())
+  name         String   @db.NVarChar(255)
+  breadType    String?  @db.NVarChar(255)
+  ingredients  String   @db.NVarChar(Max)
+  steps        String   @db.NVarChar(Max)
+  fermentation String?  @db.NVarChar(255)
+  bakingTemp   Int?
+  bakingTime   String?  @db.NVarChar(255)
+  difficulty   String?  @db.NVarChar(255)
+  tips         String?  @db.NVarChar(Max)
+  rating       Float?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

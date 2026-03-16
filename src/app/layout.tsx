@@ -9,8 +9,8 @@ const bodyFont = Noto_Serif_SC({ subsets: ["latin"], weight: ["300", "400", "500
 const serifFont = DM_Serif_Display({ subsets: ["latin"], weight: ["400"], variable: "--font-serif" });
 
 export const metadata: Metadata = {
-  title: "Coffee Journal",
-  description: "个人咖啡知识库 + 消费记录追踪器",
+  title: "面包咖啡好天气",
+  description: "面包与咖啡的生活记录",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

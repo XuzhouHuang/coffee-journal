@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Coffee, Menu, ShoppingBag, Home, MapPin, Leaf, Flame, Beaker, BookOpen, ChevronDown, LogIn, LogOut } from "lucide-react";
+import { Coffee, Menu, ShoppingBag, Home, MapPin, Leaf, Flame, Beaker, BookOpen, ChevronDown, LogIn, LogOut, Cookie, CookingPot } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/auth-provider";
 
@@ -22,10 +22,17 @@ const knowledgeItems = [
   { href: "/knowledge/processing", label: "处理法", icon: Beaker },
 ];
 
+const breadItems = [
+  { href: "/bread", label: "采购记录", icon: ShoppingBag },
+  { href: "/bread/recipes", label: "制作方法", icon: CookingPot },
+];
+
 function NavLinks({ onClick }: { onClick?: () => void }) {
   const pathname = usePathname();
   const [knowledgeOpen, setKnowledgeOpen] = useState(true);
+  const [breadOpen, setBreadOpen] = useState(true);
   const isKnowledgeActive = pathname.startsWith("/knowledge");
+  const isBreadActive = pathname.startsWith("/bread");
 
   const renderLink = (item: { href: string; label: string; icon: React.ComponentType<{ className?: string }> }, indent = false) => {
     const isActive = item.href === "/"
@@ -57,6 +64,27 @@ function NavLinks({ onClick }: { onClick?: () => void }) {
   return (
     <nav className="flex flex-col gap-0.5">
       {mainNavItems.map((item) => renderLink(item))}
+
+      <div className="mt-8 mb-3 px-3">
+        <span className="text-xs font-medium uppercase tracking-[0.15em] text-[#B8B0A8]">🍞 面包</span>
+      </div>
+
+      <button
+        onClick={() => setBreadOpen(!breadOpen)}
+        className={cn(
+          "flex items-center gap-3 px-3 py-2.5 text-base transition-all w-full border-l-2 border-transparent",
+          isBreadActive ? "text-[#2C2825]" : "text-[#9C9490] hover:text-[#2C2825]"
+        )}
+      >
+        <Cookie className="h-[18px] w-[18px] shrink-0" strokeWidth={1.5} />
+        <span className="flex-1 text-left">面包</span>
+        <ChevronDown className={cn("h-3.5 w-3.5 transition-transform text-[#B8B0A8]", breadOpen && "rotate-180")} />
+      </button>
+      {breadOpen && (
+        <div className="flex flex-col gap-0.5 mt-0.5">
+          {breadItems.map((item) => renderLink(item, true))}
+        </div>
+      )}
 
       <div className="mt-8 mb-3 px-3">
         <span className="text-xs font-medium uppercase tracking-[0.15em] text-[#B8B0A8]">Knowledge</span>
@@ -122,9 +150,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       {/* Desktop sidebar */}
       <aside className="hidden md:flex w-56 flex-col bg-[#FAF8F5] border-r border-[#E8E2DA] p-6 sticky top-0 h-screen">
         <Link href="/" className="flex items-center gap-2.5 mb-10 px-3 group">
-          <span className="text-lg transition-transform group-hover:rotate-12">☕</span>
+          <span className="text-lg transition-transform group-hover:rotate-12">🍞☕</span>
           <span className="text-lg font-normal text-[#2C2825]" style={{ fontFamily: 'var(--font-serif), serif' }}>
-            Coffee Journal
+            面包咖啡好天气
           </span>
         </Link>
         <NavLinks />
@@ -142,9 +170,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         {/* Mobile header */}
         <header className="md:hidden flex items-center justify-between bg-[#FAF8F5]/90 backdrop-blur-lg border-b border-[#E8E2DA] px-5 py-4 sticky top-0 z-50">
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-lg">☕</span>
+            <span className="text-lg">🍞☕</span>
             <span className="text-base text-[#2C2825]" style={{ fontFamily: 'var(--font-serif), serif' }}>
-              Coffee Journal
+              面包咖啡好天气
             </span>
           </Link>
           <Sheet open={open} onOpenChange={setOpen}>
@@ -155,9 +183,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             </SheetTrigger>
             <SheetContent side="left" className="w-56 bg-[#FAF8F5] border-[#E8E2DA]">
               <div className="flex items-center gap-2 mb-10 px-3 pt-4">
-                <span className="text-lg">☕</span>
+                <span className="text-lg">🍞☕</span>
                 <span className="text-base text-[#2C2825]" style={{ fontFamily: 'var(--font-serif), serif' }}>
-                  Coffee Journal
+                  面包咖啡好天气
                 </span>
               </div>
               <NavLinks onClick={() => setOpen(false)} />

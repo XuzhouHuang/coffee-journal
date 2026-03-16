@@ -89,3 +89,34 @@ export const createCafePurchaseSchema = z.object({
   notes: z.string().nullable().optional(),
   photo: z.string().nullable().optional(),
 });
+
+export const createBreadPurchaseSchema = z.object({
+  bakeryName: z.string().min(1, "面包店名不能为空"),
+  location: z.string().nullable().optional(),
+  breadName: z.string().min(1, "面包名不能为空"),
+  breadType: z.string().nullable().optional(),
+  price: z.union([z.number(), z.string()]).transform((v) => {
+    const n = typeof v === 'number' ? v : parseFloat(v);
+    if (isNaN(n)) throw new Error("价格无效");
+    return n;
+  }),
+  purchaseDate: z.string().min(1, "日期不能为空"),
+  notes: z.string().nullable().optional(),
+});
+
+export const createBreadRecipeSchema = z.object({
+  name: z.string().min(1, "配方名不能为空"),
+  breadType: z.string().nullable().optional(),
+  ingredients: z.string().min(1, "原料不能为空"),
+  steps: z.string().min(1, "步骤不能为空"),
+  fermentation: z.string().nullable().optional(),
+  bakingTemp: z.union([z.number(), z.string()]).nullable().optional().transform((v) => {
+    if (v == null || v === '') return null;
+    const n = typeof v === 'number' ? v : parseInt(v, 10);
+    return isNaN(n) ? null : n;
+  }),
+  bakingTime: z.string().nullable().optional(),
+  difficulty: z.string().nullable().optional(),
+  tips: z.string().nullable().optional(),
+  rating: z.union([z.number(), z.string()]).nullable().optional(),
+});
