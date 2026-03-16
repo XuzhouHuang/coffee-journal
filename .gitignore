@@ -49,3 +49,4 @@ prisma/dev.db
 # Screenshots
 *.png
 *.jpg
+.github/workflows/deploy.yml

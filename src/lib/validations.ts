@@ -5,9 +5,18 @@ export const createBeanSchema = z.object({
   roasterId: z.number().int().positive().nullable().optional(),
   regionId: z.number().int().positive().nullable().optional(),
   varietyId: z.number().int().positive().nullable().optional(),
+  origin: z.string().nullable().optional(),
+  altitude: z.string().nullable().optional(),
+  species: z.string().nullable().optional(),
   process: z.string().nullable().optional(),
   roastLevel: z.string().nullable().optional(),
+  roastInfo: z.string().nullable().optional(),
+  producer: z.string().nullable().optional(),
+  station: z.string().nullable().optional(),
+  batch: z.string().nullable().optional(),
   flavorNotes: z.string().nullable().optional(),
+  notes: z.string().nullable().optional(),
+  status: z.string().nullable().optional(),
   // Bean score and brew rating both use 1-5 scale
   score: z.union([z.number(), z.string()]).nullable().optional(),
 });
@@ -118,5 +127,6 @@ export const createBreadRecipeSchema = z.object({
   bakingTime: z.string().nullable().optional(),
   difficulty: z.string().nullable().optional(),
   tips: z.string().nullable().optional(),
+  notes: z.string().nullable().optional(),
   rating: z.union([z.number(), z.string()]).nullable().optional(),
 });

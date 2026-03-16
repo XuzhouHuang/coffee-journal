@@ -36,6 +36,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         bakingTime: d.bakingTime ?? null,
         difficulty: d.difficulty ?? null,
         tips: d.tips ?? null,
+        notes: d.notes ?? null,
         rating: safeParseFloat(d.rating),
       },
     });

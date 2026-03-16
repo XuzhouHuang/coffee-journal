@@ -25,6 +25,7 @@ export default async function BreadRecipeDetailPage({ params }: { params: Promis
     bakingTime: recipe.bakingTime,
     difficulty: recipe.difficulty,
     tips: recipe.tips,
+    notes: recipe.notes,
     rating: recipe.rating,
     createdAt: recipe.createdAt.toISOString(),
   };

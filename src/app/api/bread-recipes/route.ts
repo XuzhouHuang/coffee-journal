@@ -34,6 +34,7 @@ export async function POST(req: NextRequest) {
         bakingTime: d.bakingTime ?? null,
         difficulty: d.difficulty ?? null,
         tips: d.tips ?? null,
+        notes: d.notes ?? null,
         rating: safeParseFloat(d.rating),
       },
     });

@@ -81,7 +81,7 @@
   --sidebar-border: #E8E2DA;
   --sidebar-ring: #8B7355;
 
-  --font-display: clamp(2.5rem, 5vw, 3.5rem);
+  --font-display: clamp(1.75rem, 5vw, 3.5rem);
   --font-heading: clamp(1.75rem, 3vw, 2.25rem);
   --font-subheading: clamp(1.25rem, 2vw, 1.5rem);
   --font-body: clamp(0.938rem, 1.2vw, 1rem);

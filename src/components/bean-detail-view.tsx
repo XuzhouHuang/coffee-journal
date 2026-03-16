@@ -83,18 +83,31 @@ export function BeanDetailView({ initialBean }: BeanDetailViewProps) {
 
       <Card className="glass-card border-0">
         <CardContent className="pt-6 px-6 pb-6 space-y-4">
+          {/* Tags */}
           <div className="flex flex-wrap gap-1.5">
-            {bean.region && <Badge variant="secondary" className="rounded-md bg-[#F0ECE6] text-[#8B7355] border-0 text-[11px] font-medium">{bean.region.country} - {bean.region.region}</Badge>}
-            {bean.variety && <Badge variant="outline" className="rounded-md text-[11px] border-[#E8E2DA] text-[#9C9490]">{bean.variety.name}</Badge>}
             {bean.roastLevel && <Badge className="rounded-md bg-[#EBE5DD] text-[#8B7355] border-0 text-[11px] font-medium">{bean.roastLevel}</Badge>}
             {bean.process && <Badge variant="outline" className="rounded-md text-[11px] border-[#E8E2DA] text-[#9C9490]">{bean.process}</Badge>}
+            {bean.batch && <Badge variant="outline" className="rounded-md text-[11px] border-[#E8E2DA] text-[#9C9490]">批次 {bean.batch}</Badge>}
+            {bean.roaster && <Badge variant="secondary" className="rounded-md bg-[#F0ECE6] text-[#9C9490] border-0 text-[11px]">{bean.roaster.name}</Badge>}
           </div>
-          <div className="space-y-1.5 text-sm">
-            {bean.roaster && <p className="text-[#6B6058]">烘焙商: <span className="text-[#2C2825]">{bean.roaster.name}</span> <span className="text-[#B8B0A8]">({bean.roaster.country})</span></p>}
-            {bean.flavorNotes && <p className="text-[#6B6058]">风味: <span className="text-[#2C2825]">{bean.flavorNotes}</span></p>}
-            {bean.variety?.flavor && <p className="text-[#B8B0A8]">品种风味: {bean.variety.flavor}</p>}
-            {bean.score != null && <p className="font-semibold text-gradient-accent text-base">评分: {bean.score}</p>}
+
+          {/* Key info grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 text-sm">
+            {bean.origin && <div><span className="text-[#B8B0A8]">产地：</span><span className="text-[#2C2825]">{bean.origin}</span></div>}
+            {bean.region && <div><span className="text-[#B8B0A8]">产区：</span><span className="text-[#2C2825]">{bean.region.country} · {bean.region.region}</span></div>}
+            {bean.variety && <div><span className="text-[#B8B0A8]">品种：</span><span className="text-[#2C2825]">{bean.variety.name}{bean.species ? ` (${bean.species})` : ''}</span></div>}
+            {!bean.variety && bean.species && <div><span className="text-[#B8B0A8]">豆种：</span><span className="text-[#2C2825]">{bean.species}</span></div>}
+            {bean.altitude && <div><span className="text-[#B8B0A8]">海拔：</span><span className="text-[#2C2825]">{bean.altitude}</span></div>}
+            {bean.station && <div><span className="text-[#B8B0A8]">处理站：</span><span className="text-[#2C2825]">{bean.station}</span></div>}
+            {bean.producer && <div><span className="text-[#B8B0A8]">生产者：</span><span className="text-[#2C2825]">{bean.producer}</span></div>}
+            {bean.roaster && <div><span className="text-[#B8B0A8]">烘焙商：</span><span className="text-[#2C2825]">{bean.roaster.name}{bean.roaster.country ? ` (${bean.roaster.country})` : ''}</span></div>}
+            {bean.roastInfo && <div><span className="text-[#B8B0A8]">烘焙信息：</span><span className="text-[#2C2825]">{bean.roastInfo}</span></div>}
           </div>
+
+          {bean.flavorNotes && <p className="text-sm text-[#6B6058] italic">{bean.flavorNotes}</p>}
+          {bean.variety?.flavor && <p className="text-xs text-[#B8B0A8]">品种风味：{bean.variety.flavor}</p>}
+          {bean.notes && <p className="text-sm text-[#9C9490]">{bean.notes}</p>}
+          {bean.score != null && <p className="font-semibold text-gradient-accent text-base">评分: {bean.score}</p>}
         </CardContent>
       </Card>
 

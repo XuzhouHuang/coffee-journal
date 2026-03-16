@@ -46,7 +46,16 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     if (d.varietyId !== undefined) data.varietyId = d.varietyId ?? null;
     if (d.process !== undefined) data.process = d.process ?? null;
     if (d.roastLevel !== undefined) data.roastLevel = d.roastLevel ?? null;
+    if (d.roastInfo !== undefined) data.roastInfo = d.roastInfo ?? null;
+    if (d.origin !== undefined) data.origin = d.origin ?? null;
+    if (d.altitude !== undefined) data.altitude = d.altitude ?? null;
+    if (d.species !== undefined) data.species = d.species ?? null;
+    if (d.producer !== undefined) data.producer = d.producer ?? null;
+    if (d.station !== undefined) data.station = d.station ?? null;
+    if (d.batch !== undefined) data.batch = d.batch ?? null;
     if (d.flavorNotes !== undefined) data.flavorNotes = d.flavorNotes ?? null;
+    if (d.notes !== undefined) data.notes = d.notes ?? null;
+    if (d.status !== undefined) data.status = d.status ?? null;
     if (d.score !== undefined) data.score = safeParseFloat(d.score);
     const bean = await prisma.bean.update({
       where: { id: beanId },

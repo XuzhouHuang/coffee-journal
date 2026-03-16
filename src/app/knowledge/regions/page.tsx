@@ -1,12 +1,21 @@
 import { prisma } from "@/lib/db";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { RegionDialog } from "./region-dialog";
 import { AdminOnly } from "@/components/admin-only";
+import { RegionsList } from "./regions-list";
 
 export const dynamic = "force-dynamic";
 export default async function RegionsPage() {
   const regions = await prisma.region.findMany({ orderBy: { country: "asc" } });
+
+  const serialized = regions.map((r) => ({
+    id: r.id,
+    country: r.country,
+    region: r.region,
+    subRegion: r.subRegion,
+    altitude: r.altitude,
+    climate: r.climate,
+    notes: r.notes,
+  }));
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
@@ -17,27 +26,7 @@ export default async function RegionsPage() {
         </div>
         <AdminOnly><RegionDialog /></AdminOnly>
       </div>
-      {regions.length === 0 ? (
-        <p className="text-[#B8B0A8] text-center py-12 text-sm">暂无产区数据，点击右上角添加</p>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {regions.map((r) => (
-            <Card key={r.id} className="glass-card-interactive border-0">
-              <CardHeader className="pb-2 px-5 pt-5">
-                <CardTitle className="text-base text-[#2C2825]">{r.country} · {r.region}</CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm space-y-3 px-5 pb-5">
-                {r.subRegion && <p className="text-[#9C9490] text-xs">子产区: {r.subRegion}</p>}
-                <div className="flex flex-wrap gap-1.5">
-                  {r.altitude && <Badge variant="outline" className="rounded-md text-[11px] border-[#E8E2DA] text-[#9C9490]">海拔 {r.altitude}</Badge>}
-                  {r.climate && <Badge variant="secondary" className="rounded-md bg-[#F0ECE6] text-[#8B7355] border-0 text-[11px]">{r.climate}</Badge>}
-                </div>
-                {r.notes && <p className="text-[#B8B0A8] text-xs leading-relaxed">{r.notes}</p>}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+      <RegionsList regions={serialized} />
     </div>
   );
 }

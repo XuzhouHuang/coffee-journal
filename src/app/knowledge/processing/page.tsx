@@ -1,12 +1,19 @@
 import { prisma } from "@/lib/db";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { ProcessingDialog } from "./processing-dialog";
 import { AdminOnly } from "@/components/admin-only";
+import { ProcessingList } from "./processing-list";
 
 export const dynamic = "force-dynamic";
 export default async function ProcessingPage() {
   const methods = await prisma.processingMethod.findMany({ orderBy: { name: "asc" } });
+
+  const serialized = methods.map((m) => ({
+    id: m.id,
+    name: m.name,
+    description: m.description,
+    flavorNotes: m.flavorNotes,
+    suitable: m.suitable,
+  }));
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
@@ -17,34 +24,7 @@ export default async function ProcessingPage() {
         </div>
         <AdminOnly><ProcessingDialog /></AdminOnly>
       </div>
-      {methods.length === 0 ? (
-        <p className="text-[#B8B0A8] text-center py-12 text-sm">暂无处理法数据，点击右上角添加</p>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {methods.map((m) => (
-            <Card key={m.id} className="glass-card-interactive border-0">
-              <CardHeader className="pb-2 px-5 pt-5">
-                <CardTitle className="text-base text-[#2C2825]">{m.name}</CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm space-y-3 px-5 pb-5">
-                {m.description && <p className="text-[#9C9490] text-xs leading-relaxed">{m.description}</p>}
-                {m.flavorNotes && (
-                  <div>
-                    <Badge variant="secondary" className="rounded-md bg-[#F0ECE6] text-[#8B7355] border-0 text-[11px] mb-1.5">风味特点</Badge>
-                    <p className="text-[#B8B0A8] text-xs">{m.flavorNotes}</p>
-                  </div>
-                )}
-                {m.suitable && (
-                  <div>
-                    <Badge variant="outline" className="rounded-md text-[11px] border-[#E8E2DA] text-[#9C9490]">适合场景</Badge>
-                    <p className="text-[#B8B0A8] text-xs mt-1">{m.suitable}</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+      <ProcessingList methods={serialized} />
     </div>
   );
 }

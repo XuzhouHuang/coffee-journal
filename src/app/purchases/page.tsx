@@ -8,7 +8,7 @@ export default async function PurchasesPage() {
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
 
-  const [beanPurchasesRaw, cafePurchasesRaw, equipmentPurchasesRaw, monthBeanAgg, monthCafeAgg, monthEquipmentAgg, monthBeanCount, monthCafeCount, monthEquipmentCount, beanPricesRaw, cafePricesRaw, equipmentPricesRaw] = await Promise.all([
+  const [beanPurchasesRaw, cafePurchasesRaw, equipmentPurchasesRaw, breadPurchasesRaw, monthBeanAgg, monthCafeAgg, monthEquipmentAgg, monthBreadAgg, monthBeanCount, monthCafeCount, monthEquipmentCount, monthBreadCount, beanPricesRaw, cafePricesRaw, equipmentPricesRaw, breadPricesRaw] = await Promise.all([
     prisma.beanPurchase.findMany({
       include: { bean: true },
       orderBy: { purchaseDate: "desc" },
@@ -19,6 +19,10 @@ export default async function PurchasesPage() {
       take: 20,
     }),
     prisma.equipmentPurchase.findMany({
+      orderBy: { purchaseDate: "desc" },
+      take: 20,
+    }),
+    prisma.breadPurchase.findMany({
       orderBy: { purchaseDate: "desc" },
       take: 20,
     }),
@@ -34,9 +38,14 @@ export default async function PurchasesPage() {
       _sum: { price: true },
       where: { purchaseDate: { gte: startOfMonth } },
     }),
+    prisma.breadPurchase.aggregate({
+      _sum: { price: true },
+      where: { purchaseDate: { gte: startOfMonth } },
+    }),
     prisma.beanPurchase.count({ where: { purchaseDate: { gte: startOfMonth } } }),
     prisma.cafePurchase.count({ where: { purchaseDate: { gte: startOfMonth } } }),
     prisma.equipmentPurchase.count({ where: { purchaseDate: { gte: startOfMonth } } }),
+    prisma.breadPurchase.count({ where: { purchaseDate: { gte: startOfMonth } } }),
     prisma.beanPurchase.findMany({
       where: { purchaseDate: { gte: sixMonthsAgo } },
       select: { price: true, purchaseDate: true },
@@ -49,6 +58,10 @@ export default async function PurchasesPage() {
       where: { purchaseDate: { gte: sixMonthsAgo } },
       select: { price: true, purchaseDate: true },
     }),
+    prisma.breadPurchase.findMany({
+      where: { purchaseDate: { gte: sixMonthsAgo } },
+      select: { price: true, purchaseDate: true },
+    }),
   ]);
 
   function monthKey(d: Date): string {
@@ -58,6 +71,7 @@ export default async function PurchasesPage() {
   const beanByMonth = new Map<string, number>();
   const cafeByMonth = new Map<string, number>();
   const equipmentByMonth = new Map<string, number>();
+  const breadByMonth = new Map<string, number>();
   for (const p of beanPricesRaw) {
     const k = monthKey(p.purchaseDate);
     beanByMonth.set(k, (beanByMonth.get(k) || 0) + p.price);
@@ -70,8 +84,12 @@ export default async function PurchasesPage() {
     const k = monthKey(p.purchaseDate);
     equipmentByMonth.set(k, (equipmentByMonth.get(k) || 0) + p.price);
   }
+  for (const p of breadPricesRaw) {
+    const k = monthKey(p.purchaseDate);
+    breadByMonth.set(k, (breadByMonth.get(k) || 0) + p.price);
+  }
 
-  const monthlyData: { month: string; beans: number; cafe: number; equipment: number }[] = [];
+  const monthlyData: { month: string; beans: number; cafe: number; equipment: number; bread: number }[] = [];
   for (let i = 5; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const k = monthKey(d);
@@ -80,6 +98,7 @@ export default async function PurchasesPage() {
       beans: beanByMonth.get(k) || 0,
       cafe: cafeByMonth.get(k) || 0,
       equipment: equipmentByMonth.get(k) || 0,
+      bread: breadByMonth.get(k) || 0,
     });
   }
 
@@ -115,13 +134,26 @@ export default async function PurchasesPage() {
     notes: p.notes,
   }));
 
+  const breadPurchases = breadPurchasesRaw.map((p: any) => ({
+    id: p.id,
+    bakeryName: p.bakeryName,
+    location: p.location,
+    breadName: p.breadName,
+    breadType: p.breadType,
+    price: p.price,
+    purchaseDate: p.purchaseDate.toISOString(),
+    notes: p.notes,
+  }));
+
   const monthEquipment = monthEquipmentAgg._sum.price || 0;
+  const monthBread = monthBreadAgg._sum.price || 0;
   const stats = {
     monthBeans: monthBeanAgg._sum.price || 0,
     monthCafe: monthCafeAgg._sum.price || 0,
     monthEquipment,
-    monthTotal: (monthBeanAgg._sum.price || 0) + (monthCafeAgg._sum.price || 0) + monthEquipment,
-    monthCount: monthBeanCount + monthCafeCount + monthEquipmentCount,
+    monthBread,
+    monthTotal: (monthBeanAgg._sum.price || 0) + (monthCafeAgg._sum.price || 0) + monthEquipment + monthBread,
+    monthCount: monthBeanCount + monthCafeCount + monthEquipmentCount + monthBreadCount,
     monthlyData,
   };
 
@@ -130,6 +162,7 @@ export default async function PurchasesPage() {
       initialBeanPurchases={beanPurchases}
       initialCafePurchases={cafePurchases}
       initialEquipmentPurchases={equipmentPurchases}
+      initialBreadPurchases={breadPurchases}
       stats={stats}
     />
   );

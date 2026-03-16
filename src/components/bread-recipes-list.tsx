@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { EntityDialog } from "@/components/entity-dialog";
 
 interface BreadRecipe {
@@ -25,7 +27,7 @@ interface Props {
 const breadRecipeFields = [
   { name: "name", label: "配方名", required: true, placeholder: "例：经典法棍" },
   { name: "breadType", label: "面包类型", placeholder: "吐司/法棍/可颂/贝果/欧包/其他" },
-  { name: "ingredients", label: "原料 (JSON)", required: true, type: "textarea" as const, placeholder: '[{"name":"高筋面粉","amount":"500","unit":"g"}]' },
+  { name: "ingredients", label: "原料 (JSON)", required: true, type: "textarea" as const, placeholder: '[{"name":"高筋面粉","amount":"500g"}]' },
   { name: "steps", label: "步骤 (JSON)", required: true, type: "textarea" as const, placeholder: '[{"order":1,"description":"混合干性材料"}]' },
   { name: "fermentation", label: "发酵方式", placeholder: "例：室温发酵 / 冷藏发酵" },
   { name: "bakingTemp", label: "烘烤温度 (°C)", placeholder: "例：220" },
@@ -36,7 +38,14 @@ const breadRecipeFields = [
 ];
 
 export function BreadRecipesList({ initialRecipes }: Props) {
-  const recipes = initialRecipes;
+  const [search, setSearch] = useState("");
+  const recipes = initialRecipes.filter((r) => {
+    if (!search) return true;
+    const s = search.toLowerCase();
+    return r.name.toLowerCase().includes(s) 
+      || (r.breadType && r.breadType.toLowerCase().includes(s))
+      || (r.difficulty && r.difficulty.toLowerCase().includes(s));
+  });
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
@@ -52,6 +61,13 @@ export function BreadRecipesList({ initialRecipes }: Props) {
           fields={breadRecipeFields}
         />
       </div>
+
+      <Input
+        placeholder="搜索配方名/面包类型..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="sm:max-w-xs rounded-lg bg-[#F5F0EB]"
+      />
 
       {recipes.length === 0 ? (
         <p className="text-[#B8B0A8] text-center py-12 text-sm">暂无面包配方，添加你的第一个配方吧</p>

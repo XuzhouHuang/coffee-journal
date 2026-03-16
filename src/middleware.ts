@@ -3,10 +3,10 @@ import type { NextRequest } from "next/server";
 
 const SAFE_METHODS = ["GET", "HEAD", "OPTIONS"];
 
-// Trusted MI app IDs that can write via Bearer token
-const ALLOWED_APP_IDS = [
-  "f2ada564-633e-42f7-baad-d90d7a5eff81", // openclaw-wus3-00
-];
+// Trusted MI app IDs that can write via Bearer token (from env, comma-separated)
+const ALLOWED_APP_IDS = (process.env.ALLOWED_APP_IDS || "").split(",").map(s => s.trim()).filter(Boolean);
+const AUTH_TENANT_ID = process.env.AUTH_TENANT_ID || "";
+const AUTH_CLIENT_ID = process.env.AUTH_CLIENT_ID || "";
 
 function verifyBearerToken(authHeader: string): boolean {
   try {
@@ -15,12 +15,12 @@ function verifyBearerToken(authHeader: string): boolean {
     const decoded = JSON.parse(Buffer.from(payload, "base64url").toString());
 
     // Check issuer matches our tenant
-    if (decoded.iss !== "https://login.microsoftonline.com/16b3c013-d300-468d-ac64-7eda0820b6d3/v2.0") {
+    if (decoded.iss !== `https://login.microsoftonline.com/${AUTH_TENANT_ID}/v2.0`) {
       return false;
     }
 
     // Check audience matches our app
-    if (decoded.aud !== "a08c02be-1de7-4b06-89d2-ae44f0b1d121") {
+    if (decoded.aud !== AUTH_CLIENT_ID) {
       return false;
     }
 

@@ -33,8 +33,8 @@ RUN chmod 644 ./get-token.js
 USER nextjs
 EXPOSE 3000
 ENV PORT=3000
-ENV AZURE_SQL_SERVER=coffeejournalsql.database.windows.net
-ENV AZURE_SQL_DATABASE=coffee-journal-db
-ENV AZURE_MI_CLIENT_ID=ca939646-b766-4304-838c-a977d93a6f67
+# Configure via Container App environment variables:
+# AZURE_SQL_SERVER, AZURE_SQL_DATABASE, AZURE_MI_CLIENT_ID
+# AUTH_TENANT_ID, AUTH_CLIENT_ID, ALLOWED_APP_IDS
 ENV DATABASE_URL=sqlserver://placeholder:1433;database=placeholder
 CMD ["sh", "-c", "node get-token.js > /tmp/token.txt 2>/tmp/token-err.txt; export AZURE_SQL_TOKEN=$(cat /tmp/token.txt); cat /tmp/token-err.txt; cat /tmp/token-debug.txt 2>/dev/null || echo 'no debug file'; if [ -n \"$AZURE_SQL_TOKEN\" ]; then echo 'Token OK len='$(echo -n $AZURE_SQL_TOKEN | wc -c); else echo 'Token FAILED'; cat /tmp/token-err.txt; fi; exec node server.js"]

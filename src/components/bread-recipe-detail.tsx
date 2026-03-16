@@ -18,7 +18,6 @@ import { toast } from "sonner";
 interface Ingredient {
   name: string;
   amount: string;
-  unit: string;
 }
 
 interface Step {
@@ -37,6 +36,7 @@ interface Recipe {
   bakingTime: string | null;
   difficulty: string | null;
   tips: string | null;
+  notes: string | null;
   rating: number | null;
   createdAt: string;
 }
@@ -106,7 +106,6 @@ export function BreadRecipeDetail({ recipe }: Props) {
               <TableRow className="border-[#E8E2DA]">
                 <TableHead className="text-[#B8B0A8] text-xs">原料名</TableHead>
                 <TableHead className="text-[#B8B0A8] text-xs">用量</TableHead>
-                <TableHead className="text-[#B8B0A8] text-xs">单位</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -114,7 +113,6 @@ export function BreadRecipeDetail({ recipe }: Props) {
                 <TableRow key={i} className="border-[rgba(255,255,255,0.03)]">
                   <TableCell className="text-sm text-[#2C2825]">{ing.name}</TableCell>
                   <TableCell className="text-sm text-[#6B6058]">{ing.amount}</TableCell>
-                  <TableCell className="text-sm text-[#9C9490]">{ing.unit}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -148,6 +146,25 @@ export function BreadRecipeDetail({ recipe }: Props) {
         <div className="glass-card p-5">
           <h2 className="text-base font-semibold text-[#2C2825] mb-3">制作心得</h2>
           <p className="text-sm text-[#6B6058] leading-relaxed whitespace-pre-wrap">{recipe.tips}</p>
+        </div>
+      )}
+
+      {/* Notes / Source */}
+      {recipe.notes && (
+        <div className="glass-card p-5">
+          <h2 className="text-base font-semibold text-[#2C2825] mb-3">备注</h2>
+          <div className="text-sm text-[#6B6058] leading-relaxed whitespace-pre-wrap">
+            {recipe.notes.split('\n').map((line, i) => {
+              const urlMatch = line.match(/(https?:\/\/[^\s]+)/);
+              if (urlMatch) {
+                const before = line.slice(0, urlMatch.index);
+                const url = urlMatch[1];
+                const after = line.slice((urlMatch.index || 0) + url.length);
+                return <p key={i}>{before}<a href={url} target="_blank" rel="noopener noreferrer" className="text-[#8B7355] underline underline-offset-2 hover:text-[#6B5035]">{url}</a>{after}</p>;
+              }
+              return <p key={i}>{line}</p>;
+            })}
+          </div>
         </div>
       )}
 

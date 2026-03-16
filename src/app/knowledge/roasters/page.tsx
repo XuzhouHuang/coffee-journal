@@ -1,12 +1,20 @@
 import { prisma } from "@/lib/db";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { RoasterDialog } from "./roaster-dialog";
 import { AdminOnly } from "@/components/admin-only";
+import { RoastersList } from "./roasters-list";
 
 export const dynamic = "force-dynamic";
 export default async function RoastersPage() {
   const roasters = await prisma.roaster.findMany({ orderBy: { name: "asc" } });
+
+  const serialized = roasters.map((r) => ({
+    id: r.id,
+    name: r.name,
+    country: r.country,
+    specialty: r.specialty,
+    website: r.website,
+    shopUrl: r.shopUrl,
+  }));
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
@@ -17,35 +25,7 @@ export default async function RoastersPage() {
         </div>
         <AdminOnly><RoasterDialog /></AdminOnly>
       </div>
-      {roasters.length === 0 ? (
-        <p className="text-[#B8B0A8] text-center py-12 text-sm">暂无烘焙商数据，点击右上角添加</p>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {roasters.map((r) => (
-            <Card key={r.id} className="glass-card-interactive border-0">
-              <CardHeader className="pb-2 px-5 pt-5">
-                <CardTitle className="text-base flex items-center justify-between">
-                  <span className="text-[#2C2825]">{r.name}</span>
-                  <Badge variant="outline" className="rounded-md text-[11px] border-[#E8E2DA] text-[#9C9490]">{r.country}</Badge>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm space-y-2 px-5 pb-5">
-                {r.specialty && <p className="text-[#9C9490] text-xs">特色: {r.specialty}</p>}
-                {r.website && (
-                  <a href={r.website} target="_blank" rel="noopener noreferrer" className="text-[#8B7355] hover:text-[#8B7355] transition-colors block truncate text-xs">
-                    {r.website}
-                  </a>
-                )}
-                {r.shopUrl && (
-                  <a href={r.shopUrl} target="_blank" rel="noopener noreferrer" className="text-[#8B7355] hover:text-[#8B7355] transition-colors block truncate text-xs">
-                    店铺链接
-                  </a>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+      <RoastersList roasters={serialized} />
     </div>
   );
 }

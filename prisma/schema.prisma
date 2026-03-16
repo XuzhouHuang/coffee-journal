@@ -52,10 +52,19 @@ model Bean {
   roasterId   Int?
   regionId    Int?
   varietyId    Int?
+  origin      String?        @db.NVarChar(500)
+  altitude    String?        @db.NVarChar(100)
+  species     String?        @db.NVarChar(100)
   process     String?        @db.NVarChar(255)
   roastLevel  String?        @db.NVarChar(255)
+  roastInfo   String?        @db.NVarChar(500)
+  producer    String?        @db.NVarChar(500)
+  station     String?        @db.NVarChar(255)
+  batch       String?        @db.NVarChar(255)
   flavorNotes String?        @db.NVarChar(Max)
   score       Float?
+  status      String?        @db.NVarChar(50)
+  notes       String?        @db.NVarChar(Max)
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
   roaster     Roaster?       @relation(fields: [roasterId], references: [id])
@@ -158,6 +167,7 @@ model BreadRecipe {
   bakingTime   String?  @db.NVarChar(255)
   difficulty   String?  @db.NVarChar(255)
   tips         String?  @db.NVarChar(Max)
+  notes        String?  @db.NVarChar(Max)
   rating       Float?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

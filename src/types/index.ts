@@ -1,10 +1,19 @@
 export interface Bean {
   id: number;
   name: string;
+  origin?: string | null;
+  altitude?: string | null;
+  species?: string | null;
   process?: string | null;
   roastLevel?: string | null;
+  roastInfo?: string | null;
+  producer?: string | null;
+  station?: string | null;
+  batch?: string | null;
   flavorNotes?: string | null;
+  notes?: string | null;
   score?: number | null;
+  status?: string | null;
   roaster?: { id: number; name: string } | null;
   region?: { id: number; country: string; region: string } | null;
   variety?: { id: number; name: string } | null;
@@ -19,10 +28,19 @@ export interface Meta {
 export interface BeanDetail {
   id: number;
   name: string;
+  origin?: string | null;
+  altitude?: string | null;
+  species?: string | null;
   process?: string | null;
   roastLevel?: string | null;
+  roastInfo?: string | null;
+  producer?: string | null;
+  station?: string | null;
+  batch?: string | null;
   flavorNotes?: string | null;
+  notes?: string | null;
   score?: number | null;
+  status?: string | null;
   roaster?: { name: string; country: string } | null;
   region?: { country: string; region: string } | null;
   variety?: { name: string; flavor?: string | null } | null;
