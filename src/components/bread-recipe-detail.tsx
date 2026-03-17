@@ -123,20 +123,71 @@ export function BreadRecipeDetail({ recipe }: Props) {
       </div>
 
       {/* Steps */}
-      <div className="glass-card p-5">
+      <div className="glass-card p-4 sm:p-5">
         <h2 className="text-base font-semibold text-[#2C2825] mb-4">制作步骤</h2>
-        {steps.length > 0 ? (
-          <ol className="space-y-3">
-            {steps.sort((a, b) => a.order - b.order).map((step, i) => (
-              <li key={i} className="flex gap-3">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#F0ECE6] text-[#8B7355] text-xs font-medium flex items-center justify-center">
-                  {step.order}
-                </span>
-                <p className="text-sm text-[#2C2825] leading-relaxed pt-0.5">{step.description}</p>
-              </li>
-            ))}
-          </ol>
-        ) : (
+        {steps.length > 0 ? (() => {
+          const sorted = steps.sort((a, b) => a.order - b.order);
+          // Detect structured steps with 做法/效果/适合 fields → render as table
+          const isStructured = sorted.every(s =>
+            s.description.includes("做法：") && s.description.includes("效果：")
+          );
+          if (isStructured) {
+            const parseFields = (desc: string) => {
+              const extract = (key: string) => {
+                const regex = new RegExp(key + "：([^]*?)(?=(?:做法：|原理：|效果：|适合：)|$)");
+                const m = desc.match(regex);
+                return m ? m[1].trim().replace(/。$/, "") : "";
+              };
+              const nameMatch = desc.match(/^【(.+?)】/);
+              return {
+                name: nameMatch ? nameMatch[1] : "",
+                method: extract("做法"),
+                principle: extract("原理"),
+                effect: extract("效果"),
+                usage: extract("适合"),
+              };
+            };
+            const rows = sorted.map(s => parseFields(s.description));
+            return (
+              <div className="overflow-x-auto -mx-1">
+                <table className="w-full text-sm border-collapse min-w-[600px]">
+                  <thead>
+                    <tr className="border-b border-[#E8E2DA]">
+                      <th className="text-left py-2.5 px-2 text-[#8B7355] font-semibold text-xs whitespace-nowrap">种面</th>
+                      <th className="text-left py-2.5 px-2 text-[#8B7355] font-semibold text-xs">做法</th>
+                      <th className="text-left py-2.5 px-2 text-[#8B7355] font-semibold text-xs">原理</th>
+                      <th className="text-left py-2.5 px-2 text-[#8B7355] font-semibold text-xs">效果</th>
+                      <th className="text-left py-2.5 px-2 text-[#8B7355] font-semibold text-xs">适合</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.map((r, i) => (
+                      <tr key={i} className="border-b border-[#F0ECE6] hover:bg-[rgba(200,168,130,0.04)]">
+                        <td className="py-2.5 px-2 font-medium text-[#2C2825] whitespace-nowrap">{r.name}</td>
+                        <td className="py-2.5 px-2 text-[#6B6058]">{r.method}</td>
+                        <td className="py-2.5 px-2 text-[#6B6058]">{r.principle}</td>
+                        <td className="py-2.5 px-2 text-[#6B6058]">{r.effect}</td>
+                        <td className="py-2.5 px-2 text-[#6B6058]">{r.usage}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            );
+          }
+          return (
+            <ol className="space-y-3">
+              {sorted.map((step, i) => (
+                <li key={i} className="flex gap-3">
+                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#F0ECE6] text-[#8B7355] text-xs font-medium flex items-center justify-center">
+                    {step.order}
+                  </span>
+                  <p className="text-sm text-[#2C2825] leading-relaxed pt-0.5">{step.description}</p>
+                </li>
+              ))}
+            </ol>
+          );
+        })() : (
           <p className="text-[#B8B0A8] text-sm">无步骤数据</p>
         )}
       </div>
@@ -144,7 +195,7 @@ export function BreadRecipeDetail({ recipe }: Props) {
       {/* Tips */}
       {recipe.tips && (
         <div className="glass-card p-5">
-          <h2 className="text-base font-semibold text-[#2C2825] mb-3">制作心得</h2>
+          <h2 className="text-base font-semibold text-[#2C2825] mb-3">补充知识</h2>
           <p className="text-sm text-[#6B6058] leading-relaxed whitespace-pre-wrap">{recipe.tips}</p>
         </div>
       )}

@@ -2,6 +2,8 @@
 
 个人咖啡 & 面包知识库 + 消费记录追踪器
 
+<sub>✨ Vibe coded with <a href="https://github.com/openclaw/openclaw">OpenClaw</a></sub>
+
 ---
 
 ## 核心功能
