@@ -27,12 +27,19 @@ import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import type { Bean, Meta } from "@/types";
 
+interface BeanStats {
+  total: number;
+  inStock: number;
+  monthSpend: number;
+}
+
 interface BeansListProps {
   initialBeans: Bean[];
   meta: Meta;
+  stats?: BeanStats;
 }
 
-export function BeansList({ initialBeans, meta }: BeansListProps) {
+export function BeansList({ initialBeans, meta, stats }: BeansListProps) {
   const { isAdmin } = useAuth();
   const [beans, setBeans] = useState<Bean[]>(initialBeans);
 
@@ -223,16 +230,33 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
         </div>
       </div>
 
+      {/* Stats */}
+      {stats && (
+        <div className="grid gap-3 grid-cols-3">
+          {[
+            { label: "咖啡豆种类", value: `${stats.total} 款` },
+            { label: "在库", value: `${stats.inStock} 款` },
+            { label: "本月消费", value: `¥${stats.monthSpend.toFixed(0)}` },
+          ].map((s) => (
+            <div key={s.label} className="glass-card px-3 py-2.5 sm:px-4 sm:py-3 text-center">
+              <p className="text-[22px] sm:text-2xl font-bold text-[#8B7355] tracking-tight leading-none">{s.value}</p>
+              <p className="text-[10px] sm:text-[11px] text-[#B8B0A8] mt-1">{s.label}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-2">
+      <div className="flex flex-col gap-2 sm:flex-row">
         <Input
           placeholder="搜索豆名/产地/品种..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="sm:max-w-xs rounded-lg bg-[#F5F0EB]"
+          className="rounded-lg bg-[#F5F0EB]"
         />
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:gap-2">
         <Select value={filterProcess} onValueChange={setFilterProcess}>
-          <SelectTrigger className="sm:max-w-[180px] rounded-lg bg-[#F5F0EB]"><SelectValue placeholder="筛选处理法" /></SelectTrigger>
+          <SelectTrigger className="rounded-lg bg-[#F5F0EB]"><SelectValue placeholder="筛选处理法" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">全部处理法</SelectItem>
             {processOptions.map((p) => (
@@ -241,13 +265,14 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
           </SelectContent>
         </Select>
         <Select value={filterStatus} onValueChange={setFilterStatus}>
-          <SelectTrigger className="sm:max-w-[180px] rounded-lg bg-[#F5F0EB]"><SelectValue placeholder="筛选状态" /></SelectTrigger>
+          <SelectTrigger className="rounded-lg bg-[#F5F0EB]"><SelectValue placeholder="筛选状态" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">全部状态</SelectItem>
             <SelectItem value="在库">在库</SelectItem>
             <SelectItem value="已用完">已用完</SelectItem>
           </SelectContent>
         </Select>
+        </div>
       </div>
 
       {beans.length >= 20 && (search || (filterProcess && filterProcess !== "all") || (filterStatus && filterStatus !== "all")) && (
@@ -283,6 +308,9 @@ export function BeansList({ initialBeans, meta }: BeansListProps) {
                     {bean.process && <p>处理法：{bean.process}</p>}
                     {bean.station && <p>处理站：{bean.station}</p>}
                     {bean.producer && <p>生产者：{bean.producer}</p>}
+                    {bean.purchases && bean.purchases.length > 0 && (
+                      <p>库存：{bean.purchases.reduce((sum, p) => sum + p.weight, 0)}g（{bean.purchases.length}笔采购）</p>
+                    )}
                   </div>
                   {/* Tags */}
                   <div className="flex flex-wrap gap-1.5">

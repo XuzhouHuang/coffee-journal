@@ -17,6 +17,7 @@ export interface Bean {
   roaster?: { id: number; name: string } | null;
   region?: { id: number; country: string; region: string } | null;
   variety?: { id: number; name: string } | null;
+  purchases?: { weight: number }[];
 }
 
 export interface Meta {

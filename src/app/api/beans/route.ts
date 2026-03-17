@@ -20,7 +20,12 @@ export async function GET(req: NextRequest) {
     const [data, total] = await Promise.all([
       prisma.bean.findMany({
         where,
-        include: { roaster: true, region: true, variety: true },
+        include: {
+          roaster: true,
+          region: true,
+          variety: true,
+          purchases: { select: { weight: true } },
+        },
         orderBy: { createdAt: "desc" },
         skip: (page - 1) * limit,
         take: limit,

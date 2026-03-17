@@ -173,7 +173,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </Sheet>
         </header>
 
-        <main className="flex-1 p-4 md:p-10 lg:p-14 overflow-x-hidden">{children}</main>
+        <main className="flex-1 p-3 sm:p-4 md:p-10 lg:p-14 overflow-x-hidden">{children}</main>
       </div>
     </div>
   );

@@ -172,3 +172,17 @@ model BreadRecipe {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
+
+model CoffeeNews {
+  id        Int      @id @default(autoincrement())
+  title     String   @db.NVarChar(500)
+  titleZh   String   @db.NVarChar(500)
+  source    String   @db.NVarChar(255)
+  url       String   @db.NVarChar(1000)
+  summary   String?  @db.NVarChar(Max)
+  content   String?  @db.NVarChar(Max)
+  newsDate  DateTime @db.Date
+  createdAt DateTime @default(now())
+
+  @@index([newsDate(sort: Desc)])
+}
